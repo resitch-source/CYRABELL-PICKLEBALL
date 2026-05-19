@@ -3654,7 +3654,7 @@ const Render = {
 
   apiUrlSheet() {
     let url = CONFIG.API_URL;
-    const input = el('input', { class: 'input', value: url, placeholder: 'https://script.google.com/macros/s/.../exec' });
+    const input = el('input', { class: 'input', value: url, placeholder: 'https://script.google.com/macros/s/AKfycbzWoYH9p9up0DrXJyalsh-dt-Dyv8WGp6gY0ankzBFTL-4gnizkGhP26PL8g237IQuL/exec' });
     input.oninput = () => url = input.value.trim();
     Modal.open({
       title: 'Backend URL',
