@@ -1658,7 +1658,7 @@ body.display-mode::before { opacity: 0.2; }
 const CONFIG = {
   // ⚙️ PASTE YOUR DEPLOYED APPS SCRIPT WEB APP URL HERE
   // (Looks like: https://script.google.com/macros/s/AKfycb.../exec)
-  API_URL: localStorage.getItem('https://script.google.com/macros/s/AKfycbxBlylHyMr6t7qZ-ijQrJfD_-Z6J3SsMbfuV2bn29vBUW9ksZc3bbo6spLmo-kgtsQ92g/exec') || '',
+  API_URL: localStorage.getItem('dink.apiUrl') || '',
   POLL_INTERVAL_MS: 1500,
   REMINDER_LEAD_MIN: 30,
   CLUB_NAME: 'Dink & Drive',
@@ -1758,7 +1758,12 @@ const ICONS = {
    ------------------------------------------------------------- */
 const API = {
   async call(action, payload = {}, opts = {}) {
+    // Hard mock mode: only when no backend URL is configured at all.
     if (!CONFIG.API_URL) {
+      if (!State._mockWarned && State.user) {
+        State._mockWarned = true;
+        console.warn('[Dink&Drive] No backend URL configured — running in local mock mode. Open Profile → "Connect backend" to link Google Sheets.');
+      }
       return MockAPI.call(action, payload);
     }
     try {
@@ -1766,7 +1771,7 @@ const API = {
         action,
         token: State.user?.token || null,
         email: State.user?.email || null,
-        payload,
+        payload: { ...payload, _displayName: State.user?.name || null },
       });
       const res = await fetch(CONFIG.API_URL, {
         method: 'POST',
@@ -1774,7 +1779,7 @@ const API = {
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         redirect: 'follow',
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status} from backend`);
       const data = await res.json();
       State.apiHealthy = true;
       if (data.error) throw new Error(data.error);
@@ -1782,7 +1787,17 @@ const API = {
     } catch (err) {
       State.apiHealthy = false;
       console.warn('[API]', action, err.message);
-      if (opts.fallbackToMock !== false) return MockAPI.call(action, payload);
+      // CRITICAL: surface the error so callers can show a toast / retry.
+      // Only fall back to mock if the caller *explicitly* opts in (e.g. read-only
+      // GETs during boot can tolerate it). Writes must never silently mock.
+      if (opts.fallbackToMock === true) {
+        Toast.show({
+          title: 'Backend unreachable',
+          msg: 'Showing cached data. Changes will not persist until reconnected.',
+          type: 'warn',
+        });
+        return MockAPI.call(action, payload);
+      }
       throw err;
     }
   },
@@ -2458,7 +2473,25 @@ const Scoring = {
   },
   save() {
     if (!State.currentMatch) return;
-    API.call('saveScore', State.currentMatch);
+    // Debounce: scoring sends rapid-fire updates; we only need the latest within ~600ms.
+    clearTimeout(this._saveTimer);
+    this._saveTimer = setTimeout(async () => {
+      try {
+        await API.call('saveScore', State.currentMatch);
+        State._lastScoreError = null;
+      } catch (err) {
+        // Only toast the first failure in a streak to avoid spam.
+        if (!State._lastScoreError) {
+          Toast.show({
+            title: 'Score not synced',
+            msg: 'The scoreboard is live locally, but the server did not save. Check your connection.',
+            type: 'warn',
+          });
+        }
+        State._lastScoreError = err.message;
+        console.warn('[saveScore]', err.message);
+      }
+    }, 600);
   },
 };
 
@@ -2466,11 +2499,13 @@ const Scoring = {
    DATA LOADING
    ------------------------------------------------------------- */
 async function loadAll() {
+  // Read-only boot fetches: tolerate a transient backend hiccup by reading from
+  // local cache. Writes (createBooking, payBooking, saveScore) NEVER fall back.
   const [courts, bookings, payments, notifications] = await Promise.all([
-    API.call('getCourts'),
-    API.call('getBookings'),
-    API.call('getPayments'),
-    API.call('getNotifications'),
+    API.call('getCourts', {}, { fallbackToMock: true }),
+    API.call('getBookings', {}, { fallbackToMock: true }),
+    API.call('getPayments', {}, { fallbackToMock: true }),
+    API.call('getNotifications', {}, { fallbackToMock: true }),
   ]);
   State.courts = courts || [];
   State.bookings = bookings || [];
@@ -2528,12 +2563,30 @@ const Render = {
   authScreen() {
     const root = $('#root');
     root.innerHTML = '';
+    const offlineBanner = !CONFIG.API_URL
+      ? el('div', { class: 'auth-warn-banner', style: {
+          background: 'rgba(217, 119, 87, 0.12)',
+          border: '1px solid rgba(217, 119, 87, 0.4)',
+          color: 'var(--accent)',
+          borderRadius: '10px',
+          padding: '0.7rem 0.9rem',
+          marginBottom: '1rem',
+          fontSize: '0.8rem',
+          lineHeight: '1.4',
+        }},
+          el('strong', {}, '⚠️  Local mode — no backend connected.'),
+          el('div', { style: { marginTop: '4px', color: 'var(--fg-soft)' } },
+            'Bookings, scores, and notifications will live in this browser only and will not appear in your Google Sheet. Tap Profile → Connect backend after signing in to point at your Apps Script URL.'),
+        )
+      : null;
+
     root.appendChild(
       el('div', { class: 'auth-screen' },
         el('div', { class: 'auth-card' },
           el('div', { class: 'brand-mark', html: `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" fill="#E8B647"/><circle cx="12" cy="12" r="8" stroke="#0F3D2E" stroke-width="1" stroke-dasharray="2 2" fill="none"/></svg>` }),
           el('h1', { html: 'Dink &amp; <em>Drive</em>' }),
           el('p', {}, 'Premium pickleball club management. Book, score, and play.'),
+          offlineBanner,
           el('div', { class: 'field' },
             el('label', {}, 'Your name'),
             el('input', { class: 'input', id: 'auth-name', placeholder: 'e.g. Maria Santos', autocomplete: 'name' }),
@@ -2593,12 +2646,22 @@ const Render = {
 
   topbarNode() {
     const unreadCount = (State.notifications || []).filter(n => !n.read).length;
+    const backendStatus = !CONFIG.API_URL
+      ? { color: '#D97757', label: 'Local mode — no backend', icon: '○' }
+      : State.apiHealthy
+        ? { color: '#5BA47A', label: 'Connected to Google Sheets', icon: '●' }
+        : { color: '#D97757', label: 'Backend unreachable', icon: '●' };
     return el('header', { class: 'topbar' },
       el('div', { class: 'brand' },
         el('div', { class: 'brand-mark', html: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="#E8B647"/><circle cx="12" cy="12" r="8" stroke="#0F3D2E" stroke-width="1" stroke-dasharray="2 2" fill="none"/></svg>` }),
         el('span', { html: 'Dink <em>&amp; Drive</em>' }),
       ),
       el('div', { class: 'topbar-actions' },
+        el('button', {
+          class: 'icon-btn', title: backendStatus.label, 'aria-label': backendStatus.label,
+          style: { color: backendStatus.color, fontSize: '0.9rem', fontWeight: '700' },
+          onClick: () => { State.route = 'profile'; Render.current(); },
+        }, backendStatus.icon),
         el('button', { class: 'icon-btn', 'aria-label': 'Notifications', onClick: () => Render.notificationsSheet(),
           html: ICONS.bell + (unreadCount ? `<span class="badge">${unreadCount}</span>` : '') }),
         el('button', { class: 'icon-btn', 'aria-label': 'Toggle theme', onClick: () => Theme.toggle(),
@@ -2843,19 +2906,36 @@ const Render = {
             ? Array.from({ length: 4 }, (_, i) => { const d = new Date(date); d.setDate(d.getDate() + i * 7); return ymd(d); })
             : [date];
 
-          for (const d of datesToBook) {
-            const booking = await API.call('createBooking', {
-              courtId, courtName: court.name, date: d, time, duration, players, price,
+          const createdBookings = [];
+          try {
+            for (const d of datesToBook) {
+              const booking = await API.call('createBooking', {
+                courtId, courtName: court.name, date: d, time, duration, players, price,
+              });
+              if (!booking || !booking.id) {
+                throw new Error('Backend did not return a booking record');
+              }
+              createdBookings.push(booking);
+              State.bookings.push(booking);
+              Notify.scheduleReminder(booking);
+            }
+            Toast.show({ title: `Booked ${court.name}`, msg: `${fmtDate(date)} at ${time}${repeat ? ' (×4 weeks)' : ''}`, type: 'success' });
+            Notify.push({ title: 'Booking confirmed', body: `${court.name} on ${fmtDate(date)} at ${time}. Payment ${fmtMoney(price)} pending.` });
+            close();
+            await loadAll();
+            Render.current();
+          } catch (err) {
+            // Roll back optimistic state for any bookings that did succeed before the failure
+            for (const b of createdBookings) {
+              State.bookings = State.bookings.filter(x => x.id !== b.id);
+            }
+            Toast.show({
+              title: 'Booking failed',
+              msg: err.message || 'Could not save to the server. Please try again.',
+              type: 'danger',
             });
-            State.bookings.push(booking);
-            Notify.scheduleReminder(booking);
+            console.error('[createBooking]', err);
           }
-
-          Toast.show({ title: `Booked ${court.name}`, msg: `${fmtDate(date)} at ${time}${repeat ? ' (×4 weeks)' : ''}`, type: 'success' });
-          Notify.push({ title: 'Booking confirmed', body: `${court.name} on ${fmtDate(date)} at ${time}. Payment ${fmtMoney(price)} pending.` });
-          close();
-          await loadAll();
-          Render.current();
         }
       }]
     });
@@ -3574,7 +3654,7 @@ const Render = {
 
   apiUrlSheet() {
     let url = CONFIG.API_URL;
-    const input = el('input', { class: 'input', value: url, placeholder: 'https://script.google.com/macros/s/AKfycbxBlylHyMr6t7qZ-ijQrJfD_-Z6J3SsMbfuV2bn29vBUW9ksZc3bbo6spLmo-kgtsQ92g/exec' });
+    const input = el('input', { class: 'input', value: url, placeholder: 'https://script.google.com/macros/s/.../exec' });
     input.oninput = () => url = input.value.trim();
     Modal.open({
       title: 'Backend URL',
