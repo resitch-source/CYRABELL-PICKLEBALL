@@ -1,0 +1,3944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+<meta name="theme-color" content="#0F3D2E" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0A1F18" media="(prefers-color-scheme: dark)" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="description" content="Dink & Drive — premium pickleball club management. Book courts, score matches, and manage your club." />
+<title>Dink & Drive — Pickleball Club</title>
+
+<!-- Inline PWA manifest via data URI -->
+<link rel="manifest" href='data:application/manifest+json,{"name":"Dink %26 Drive","short_name":"Dink","start_url":".","display":"standalone","background_color":"%230F3D2E","theme_color":"%230F3D2E","icons":[{"src":"data:image/svg%2Bxml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect width=%22192%22 height=%22192%22 rx=%2240%22 fill=%22%230F3D2E%22/%3E%3Ccircle cx=%2296%22 cy=%2296%22 r=%2256%22 fill=%22%23E8B647%22/%3E%3Ccircle cx=%2296%22 cy=%2296%22 r=%2256%22 fill=%22none%22 stroke=%22%230F3D2E%22 stroke-width=%224%22 stroke-dasharray=%228%208%22/%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"}]}' />
+
+<!-- Favicon as inline SVG -->
+<link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="%230F3D2E"/><circle cx="32" cy="32" r="18" fill="%23E8B647"/><circle cx="32" cy="32" r="18" fill="none" stroke="%230F3D2E" stroke-width="1.5" stroke-dasharray="3 3"/></svg>' />
+
+<!-- Typography: Fraunces (display serif) + Plus Jakarta Sans (body) — a refined athletic-luxury pairing -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DESIGN TOKENS — Refined athletic-luxury aesthetic
+   Inspired by clay courts, brass fittings, and old-club leather
+   ============================================================ */
+:root {
+  /* Brand palette */
+  --court-green: #0F3D2E;
+  --court-green-deep: #0A2A20;
+  --court-green-soft: #1B5840;
+  --clay: #D97757;
+  --clay-soft: #E89B82;
+  --brass: #E8B647;
+  --brass-soft: #F4D58A;
+  --paper: #F8F4ED;
+  --paper-warm: #F0E9DB;
+  --cream: #FBF8F2;
+  --ink: #1A1F1C;
+  --ink-soft: #4A5550;
+  --ink-mute: #8A938E;
+  --line: rgba(15, 61, 46, 0.10);
+  --line-strong: rgba(15, 61, 46, 0.18);
+
+  /* Semantic */
+  --bg: var(--cream);
+  --bg-elev: #FFFFFF;
+  --bg-sunk: var(--paper);
+  --fg: var(--ink);
+  --fg-soft: var(--ink-soft);
+  --fg-mute: var(--ink-mute);
+  --accent: var(--court-green);
+  --accent-fg: var(--cream);
+  --highlight: var(--clay);
+  --gold: var(--brass);
+
+  --success: #2D7A4F;
+  --warn: #C77B2C;
+  --danger: #B5432E;
+
+  /* Shape */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* Shadow — soft, layered, no AI-generic blur halos */
+  --shadow-sm: 0 1px 2px rgba(15,31,28,0.04), 0 1px 1px rgba(15,31,28,0.03);
+  --shadow-md: 0 4px 16px -4px rgba(15,31,28,0.08), 0 2px 6px -2px rgba(15,31,28,0.04);
+  --shadow-lg: 0 24px 48px -16px rgba(15,31,28,0.18), 0 8px 16px -8px rgba(15,31,28,0.08);
+  --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.6);
+
+  /* Type */
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Safe areas */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Nav */
+  --nav-height: 68px;
+}
+
+[data-theme="dark"] {
+  --bg: #0A1F18;
+  --bg-elev: #122B22;
+  --bg-sunk: #081812;
+  --fg: #F0E9DB;
+  --fg-soft: #B8C2BC;
+  --fg-mute: #7A857E;
+  --line: rgba(240, 233, 219, 0.08);
+  --line-strong: rgba(240, 233, 219, 0.16);
+  --accent: #E8B647;
+  --accent-fg: #0A1F18;
+  --paper: #122B22;
+  --paper-warm: #1A382C;
+  --cream: #0A1F18;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 16px -4px rgba(0,0,0,0.5);
+  --shadow-lg: 0 24px 48px -16px rgba(0,0,0,0.6);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: contain;
+  min-height: 100vh;
+  min-height: 100dvh;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; padding: 0; }
+a { color: var(--accent); text-decoration: none; }
+h1,h2,h3,h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 0;
+  font-variation-settings: "opsz" 96, "SOFT" 50;
+}
+h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.05; }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.1; }
+h3 { font-size: 1.25rem; line-height: 1.2; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--fg-mute);
+  font-weight: 500;
+}
+
+/* Subtle decorative grain texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0 0.1 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   LAYOUT SHELL
+   ============================================================ */
+#app {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--safe-top);
+  padding-bottom: calc(var(--nav-height) + var(--safe-bottom));
+}
+@media (min-width: 900px) {
+  #app { padding-bottom: var(--safe-bottom); padding-left: 88px; }
+}
+
+.view {
+  flex: 1;
+  padding: 1rem 1.25rem 2rem;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  animation: viewIn 0.5s var(--ease-out);
+}
+@keyframes viewIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.view[hidden] { display: none !important; }
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.5rem;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  gap: 0.75rem;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144;
+}
+.brand-mark {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: var(--accent);
+  display: grid;
+  place-items: center;
+  box-shadow: var(--shadow-sm);
+}
+.brand-mark svg { width: 22px; height: 22px; }
+.brand em { font-style: italic; color: var(--clay); font-weight: 500; }
+
+.topbar-actions { display: flex; gap: 0.5rem; align-items: center; }
+.icon-btn {
+  width: 40px; height: 40px;
+  border-radius: var(--r-pill);
+  display: grid; place-items: center;
+  color: var(--fg);
+  transition: background 0.2s, transform 0.2s var(--ease-spring);
+  position: relative;
+}
+.icon-btn:hover { background: var(--bg-sunk); }
+.icon-btn:active { transform: scale(0.92); }
+.icon-btn svg { width: 20px; height: 20px; }
+.icon-btn .badge {
+  position: absolute;
+  top: 6px; right: 6px;
+  background: var(--clay);
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: var(--r-pill);
+  line-height: 1;
+}
+
+/* ============================================================
+   BOTTOM NAVIGATION (mobile) / SIDE RAIL (desktop)
+   ============================================================ */
+.nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: calc(var(--nav-height) + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+  background: color-mix(in srgb, var(--bg-elev) 92%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 50;
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  color: var(--fg-mute);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+  position: relative;
+  min-height: 44px;
+}
+.nav-item svg { width: 22px; height: 22px; transition: transform 0.3s var(--ease-spring); }
+.nav-item.active { color: var(--accent); }
+.nav-item.active svg { transform: translateY(-2px) scale(1.08); }
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  width: 22px; height: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+[data-theme="dark"] .nav-item.active::before { background: var(--brass); }
+[data-theme="dark"] .nav-item.active { color: var(--brass); }
+
+@media (min-width: 900px) {
+  .nav {
+    top: 0; bottom: 0; right: auto;
+    width: 88px; height: 100vh; height: 100dvh;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: calc(var(--safe-top) + 80px);
+    gap: 4px;
+    border-right: 1px solid var(--line);
+    border-top: none;
+  }
+  .nav-item { flex: 0; width: 100%; padding: 12px 4px; font-size: 0.7rem; }
+  .nav-item.active::before { top: 50%; left: 0; transform: translateY(-50%); width: 3px; height: 24px; }
+}
+
+/* ============================================================
+   CARDS, BUTTONS, INPUTS — the design DNA
+   ============================================================ */
+.card {
+  background: var(--bg-elev);
+  border-radius: var(--r-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--line);
+  position: relative;
+  overflow: hidden;
+}
+.card.feature {
+  background: linear-gradient(140deg, var(--court-green) 0%, var(--court-green-deep) 100%);
+  color: var(--cream);
+  border: none;
+  box-shadow: var(--shadow-md);
+}
+.card.feature::after {
+  content: '';
+  position: absolute;
+  top: -40%; right: -20%;
+  width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(232,182,71,0.18), transparent 70%);
+  pointer-events: none;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.4rem;
+  border-radius: var(--r-pill);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: -0.005em;
+  transition: transform 0.2s var(--ease-spring), background 0.2s, box-shadow 0.2s;
+  min-height: 48px;
+  position: relative;
+  white-space: nowrap;
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-fg);
+  box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover { box-shadow: var(--shadow-md); }
+.btn-secondary {
+  background: var(--bg-sunk);
+  color: var(--fg);
+  border: 1px solid var(--line-strong);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--fg);
+}
+.btn-ghost:hover { background: var(--bg-sunk); }
+.btn-accent {
+  background: var(--clay);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+.btn-sm { padding: 0.5rem 0.9rem; min-height: 36px; font-size: 0.85rem; }
+.btn-block { width: 100%; }
+
+.input, .select, .textarea {
+  width: 100%;
+  background: var(--bg-elev);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  padding: 0.85rem 1rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--fg);
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  min-height: 48px;
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent);
+}
+.field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+.field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--fg-soft);
+  letter-spacing: 0.01em;
+}
+
+/* Chips / pills */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--r-pill);
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--bg-sunk);
+  color: var(--fg-soft);
+  border: 1px solid var(--line);
+}
+.chip.success { background: color-mix(in srgb, var(--success) 12%, transparent); color: var(--success); border-color: transparent; }
+.chip.warn { background: color-mix(in srgb, var(--warn) 14%, transparent); color: var(--warn); border-color: transparent; }
+.chip.danger { background: color-mix(in srgb, var(--danger) 12%, transparent); color: var(--danger); border-color: transparent; }
+.chip.accent { background: color-mix(in srgb, var(--clay) 14%, transparent); color: var(--clay); border-color: transparent; }
+.chip-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 1.5rem 0 0.75rem;
+  gap: 1rem;
+}
+.section-header h2 { font-size: 1.5rem; }
+.section-header .link {
+  font-size: 0.85rem;
+  color: var(--fg-mute);
+  font-weight: 600;
+}
+.stack > * + * { margin-top: 0.75rem; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem; }
+
+/* ============================================================
+   HOME / BOOK VIEW
+   ============================================================ */
+.hero {
+  background: linear-gradient(140deg, var(--court-green) 0%, var(--court-green-deep) 100%);
+  color: var(--cream);
+  border-radius: var(--r-xl);
+  padding: 1.75rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-image:
+    radial-gradient(circle at 90% 10%, rgba(232,182,71,0.16), transparent 50%),
+    radial-gradient(circle at 10% 110%, rgba(217,119,87,0.18), transparent 55%);
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 1; }
+.hero .eyebrow { color: var(--brass-soft); }
+.hero h1 {
+  font-size: 2.2rem;
+  margin: 0.4rem 0 0.6rem;
+  font-weight: 500;
+  font-variation-settings: "opsz" 144, "SOFT" 80;
+}
+.hero h1 em { color: var(--brass); font-style: italic; font-weight: 400; }
+.hero-meta { font-size: 0.9rem; opacity: 0.85; }
+.hero-cta { margin-top: 1.25rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.hero .btn-primary { background: var(--brass); color: var(--court-green-deep); }
+.hero .btn-ghost { color: var(--cream); border: 1px solid rgba(255,255,255,0.2); }
+
+/* Quick stats */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.stat {
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 0.9rem 0.75rem;
+  text-align: center;
+}
+.stat-value {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--accent);
+  font-variation-settings: "opsz" 96;
+}
+[data-theme="dark"] .stat-value { color: var(--brass); }
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--fg-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+/* Court cards */
+.court-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease-spring), box-shadow 0.2s;
+}
+.court-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.court-mini {
+  width: 54px; height: 78px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, var(--court-green-soft) 0%, var(--court-green) 100%);
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid var(--court-green);
+}
+.court-mini::before, .court-mini::after {
+  content: '';
+  position: absolute;
+  background: rgba(255,255,255,0.5);
+}
+.court-mini::before { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-50%); background: rgba(255,255,255,0.7); }
+.court-mini::after { top: 20%; bottom: 20%; left: 50%; width: 1px; transform: translateX(-50%); }
+.court-info { flex: 1; min-width: 0; }
+.court-info h3 { font-size: 1.05rem; margin-bottom: 2px; }
+.court-info p { margin: 0; font-size: 0.82rem; color: var(--fg-mute); }
+.court-meta { display: flex; align-items: center; gap: 0.5rem; }
+
+/* Time slot grid */
+.timeslots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  gap: 0.5rem;
+}
+.timeslot {
+  padding: 0.7rem 0.5rem;
+  border-radius: var(--r-md);
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-variant-numeric: tabular-nums;
+}
+.timeslot.available:hover { border-color: var(--accent); transform: translateY(-1px); }
+.timeslot.selected { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.timeslot.booked { background: var(--bg-sunk); color: var(--fg-mute); cursor: not-allowed; text-decoration: line-through; opacity: 0.7; }
+
+/* ============================================================
+   CALENDAR
+   ============================================================ */
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+}
+.cal-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 500;
+  font-variation-settings: "opsz" 144;
+}
+.cal-nav { display: flex; gap: 0.25rem; }
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-dow {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-mute);
+  text-align: center;
+  padding: 0.5rem 0;
+  font-weight: 600;
+}
+.cal-day {
+  aspect-ratio: 1;
+  border-radius: var(--r-md);
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s var(--ease-out);
+  min-height: 44px;
+  padding: 4px;
+}
+.cal-day:hover { border-color: var(--accent); }
+.cal-day.other-month { opacity: 0.35; }
+.cal-day.today { border-color: var(--clay); }
+.cal-day.today::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--r-md);
+  border: 1.5px solid var(--clay);
+  pointer-events: none;
+}
+.cal-day.selected { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+.cal-day-num {
+  font-size: 1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.cal-day-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--clay);
+  margin-top: 2px;
+}
+.cal-day.selected .cal-day-dot { background: var(--brass); }
+
+/* Day detail */
+.day-detail {
+  margin-top: 1rem;
+}
+.booking-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem;
+  border-radius: var(--r-md);
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  margin-bottom: 0.5rem;
+}
+.booking-time {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 56px;
+  font-variant-numeric: tabular-nums;
+}
+[data-theme="dark"] .booking-time { color: var(--brass); }
+.booking-meta { flex: 1; min-width: 0; }
+.booking-meta h4 { font-family: var(--font-body); font-size: 0.92rem; font-weight: 600; margin: 0; }
+.booking-meta p { margin: 1px 0 0; font-size: 0.78rem; color: var(--fg-mute); }
+.booking-actions { display: flex; gap: 0.3rem; }
+
+/* ============================================================
+   SCORING — the showpiece
+   ============================================================ */
+.scoreboard {
+  background: linear-gradient(160deg, var(--court-green) 0%, var(--court-green-deep) 100%);
+  color: var(--cream);
+  border-radius: var(--r-xl);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.scoreboard::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(232,182,71,0.12), transparent 50%),
+    radial-gradient(circle at 80% 100%, rgba(217,119,87,0.10), transparent 50%);
+}
+.score-teams { position: relative; z-index: 1; }
+.score-team {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+.score-team + .score-team {
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+.team-info { flex: 1; min-width: 0; }
+.team-name { font-family: var(--font-display); font-size: 1.2rem; font-weight: 500; }
+.team-players { font-size: 0.8rem; opacity: 0.7; }
+.team-score {
+  font-family: var(--font-display);
+  font-size: 4.5rem;
+  line-height: 1;
+  font-weight: 500;
+  color: var(--brass);
+  font-variant-numeric: tabular-nums;
+  min-width: 80px;
+  text-align: right;
+  font-variation-settings: "opsz" 144;
+  transition: transform 0.4s var(--ease-spring);
+}
+.score-team.serving .team-name::after {
+  content: '●';
+  color: var(--clay);
+  font-size: 0.7em;
+  margin-left: 0.4em;
+  vertical-align: middle;
+}
+.score-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  opacity: 0.8;
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Set pips — small indicator beside each team's score */
+.set-pips {
+  display: inline-flex;
+  gap: 4px;
+  margin-top: 6px;
+  justify-content: flex-end;
+}
+.set-pip {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  transition: background 0.3s, transform 0.3s var(--ease-spring);
+}
+.set-pip.won { background: var(--brass); border-color: var(--brass); transform: scale(1.1); box-shadow: 0 0 8px rgba(232,182,71,0.6); }
+
+/* Set history table inside scoreboard */
+.set-history {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(255,255,255,0.10);
+  position: relative;
+  z-index: 1;
+}
+.set-row {
+  display: grid;
+  grid-template-columns: 56px 1fr 1fr;
+  gap: 0.5rem;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+.set-row .set-label {
+  color: rgba(232,182,71,0.7);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.set-row .set-cell {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+}
+.set-row .set-cell.lost { color: rgba(255,255,255,0.5); }
+.set-row .set-cell.won { color: var(--brass); }
+.set-row.current .set-label { color: var(--clay); }
+.set-row.current .set-cell { color: var(--cream); }
+
+/* Display-mode set pips */
+.display-board .ds-set-pips {
+  display: inline-flex;
+  gap: 0.8vw;
+  margin-top: 1vh;
+}
+.display-board .ds-set-pip {
+  width: clamp(12px, 1.4vw, 22px);
+  height: clamp(12px, 1.4vw, 22px);
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+.display-board .ds-set-pip.won {
+  background: var(--brass);
+  border-color: var(--brass);
+  box-shadow: 0 0 16px rgba(232,182,71,0.5);
+}
+.display-board .ds-set-history {
+  display: flex;
+  gap: 1.5vw;
+  font-family: var(--font-mono);
+  font-size: clamp(0.85rem, 1.4vw, 1.3rem);
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+}
+.display-board .ds-set-history .ds-set {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-transform: uppercase;
+}
+.display-board .ds-set-history .ds-set-label {
+  font-size: 0.7em;
+  opacity: 0.6;
+}
+.display-board .ds-set-history .ds-set-score {
+  color: var(--brass);
+  font-weight: 600;
+}
+
+.score-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.score-btn {
+  padding: 1.5rem 1rem;
+  border-radius: var(--r-lg);
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  font-weight: 700;
+  font-size: 1.05rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all 0.2s var(--ease-spring);
+  min-height: 88px;
+}
+.score-btn:active { transform: scale(0.96); background: var(--bg-sunk); }
+.score-btn .sub { font-size: 0.72rem; font-weight: 500; color: var(--fg-mute); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.score-aux {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Team avatars — in-app scoreboard */
+.team-avatars {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+.team-avatars .team-avatar + .team-avatar {
+  margin-left: -16px;
+}
+.team-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 2px solid var(--brass);
+  overflow: hidden;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--brass);
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease-spring);
+}
+.team-avatar:hover { transform: translateY(-2px); z-index: 2; }
+.team-avatar.empty {
+  border-style: dashed;
+  border-color: rgba(232,182,71,0.4);
+  background: rgba(255,255,255,0.04);
+}
+.team-avatar.empty svg { width: 20px; height: 20px; color: rgba(232,182,71,0.6); }
+.team-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.score-team.serving .team-avatar {
+  box-shadow: 0 0 0 3px var(--clay), 0 0 24px rgba(217,119,87,0.5);
+  border-color: var(--clay);
+}
+.score-team.serving .team-avatar.empty {
+  box-shadow: 0 0 0 3px rgba(217,119,87,0.4);
+}
+
+/* Camera capture interface */
+.camera-stage {
+  position: relative;
+  background: #000;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  aspect-ratio: 1;
+  max-width: 320px;
+  margin: 0 auto;
+}
+.camera-stage video,
+.camera-stage canvas,
+.camera-stage img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+}
+.camera-stage video { transform: scaleX(-1); } /* mirror selfie */
+.camera-stage.no-mirror video { transform: none; }
+.camera-frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: var(--r-lg);
+  box-shadow: inset 0 0 0 3px rgba(232,182,71,0.5);
+}
+.camera-frame::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 70%; aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px dashed rgba(255,255,255,0.4);
+  transform: translate(-50%, -50%);
+}
+.camera-empty {
+  position: absolute; inset: 0;
+  display: grid;
+  place-items: center;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 1rem;
+  background: linear-gradient(140deg, #1a2520, #0a1410);
+}
+.camera-empty svg { width: 48px; height: 48px; opacity: 0.5; margin: 0 auto 0.5rem; display: block; }
+.camera-controls {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.shutter {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--bg-elev);
+  border: 4px solid var(--accent);
+  display: grid; place-items: center;
+  transition: transform 0.15s var(--ease-spring);
+}
+.shutter:active { transform: scale(0.9); }
+.shutter::after {
+  content: '';
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.shutter.captured::after { background: var(--success); }
+
+/* Team avatar buttons in new-match sheet */
+.team-photo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+.team-photo-thumbs {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+.team-photo-thumb {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--bg-sunk);
+  border: 2px dashed var(--line-strong);
+  overflow: hidden;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  color: var(--fg-mute);
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s var(--ease-spring);
+  position: relative;
+}
+.team-photo-thumb:hover { border-color: var(--accent); }
+.team-photo-thumb:active { transform: scale(0.95); }
+.team-photo-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.team-photo-thumb.has-photo {
+  border-style: solid;
+  border-color: var(--brass);
+}
+.team-photo-thumb svg { width: 20px; height: 20px; }
+.team-photo-thumb .thumb-label {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--fg-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Display mode (cast/TV) */
+body.display-mode { background: var(--court-green-deep); }
+body.display-mode::before { opacity: 0.2; }
+.display-board {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 4vh 4vw;
+  color: var(--cream);
+  background: linear-gradient(140deg, var(--court-green) 0%, var(--court-green-deep) 100%);
+  z-index: 100;
+}
+.display-board .ds-meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.display-board .ds-grid {
+  flex: 1;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 2vh;
+  margin: 4vh 0;
+}
+.display-board .ds-team {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2vh 3vw;
+  border-radius: 2vw;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+}
+.display-board .ds-team.serving { border-color: var(--brass); background: rgba(232,182,71,0.08); }
+.display-board .ds-team.serving::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 1vw;
+  transform: translateY(-50%);
+  width: 1.2vw; height: 1.2vw;
+  min-width: 14px; min-height: 14px;
+  border-radius: 50%;
+  background: var(--clay);
+  box-shadow: 0 0 24px var(--clay);
+}
+.display-board .ds-name {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 500;
+  font-variation-settings: "opsz" 144, "SOFT" 80;
+}
+.display-board .ds-players { font-size: clamp(0.9rem, 1.8vw, 1.4rem); opacity: 0.7; }
+.display-board .ds-side {
+  display: flex;
+  align-items: center;
+  gap: 2vw;
+  min-width: 0;
+  flex: 1;
+}
+.display-board .ds-avatars {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.display-board .ds-avatars .ds-avatar + .ds-avatar {
+  margin-left: clamp(-50px, -3vw, -28px);
+}
+.display-board .ds-avatar {
+  width: clamp(80px, 11vw, 180px);
+  height: clamp(80px, 11vw, 180px);
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.2);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.06);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 500;
+  color: rgba(232,182,71,0.6);
+  transition: border-color 0.4s, box-shadow 0.4s;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+.display-board .ds-avatar img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.display-board .ds-team.serving .ds-avatar {
+  border-color: var(--clay);
+  box-shadow: 0 0 32px rgba(217,119,87,0.4);
+}
+.display-board .ds-score {
+  font-family: var(--font-display);
+  font-size: clamp(8rem, 22vw, 18rem);
+  font-weight: 500;
+  color: var(--brass);
+  line-height: 0.85;
+  font-variant-numeric: tabular-nums;
+  font-variation-settings: "opsz" 144;
+}
+.display-board .ds-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.display-board .ds-brand {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--brass);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+}
+
+/* ============================================================
+   CHAT
+   ============================================================ */
+.chat-wrap {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--nav-height) - var(--safe-bottom) - var(--safe-top) - 60px);
+  max-height: 700px;
+}
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  scroll-behavior: smooth;
+}
+.msg {
+  max-width: 82%;
+  padding: 0.7rem 1rem;
+  border-radius: 18px;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  word-wrap: break-word;
+  animation: msgIn 0.3s var(--ease-out);
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.msg.user {
+  align-self: flex-end;
+  background: var(--accent);
+  color: var(--accent-fg);
+  border-bottom-right-radius: 6px;
+}
+.msg.ai {
+  align-self: flex-start;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-bottom-left-radius: 6px;
+}
+.msg.ai strong { color: var(--clay); }
+.msg .typing {
+  display: inline-flex;
+  gap: 3px;
+}
+.msg .typing span {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--fg-mute);
+  animation: typing 1.2s infinite;
+}
+.msg .typing span:nth-child(2) { animation-delay: 0.2s; }
+.msg .typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+.chat-input-wrap {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line);
+}
+.chat-input {
+  flex: 1;
+  background: var(--bg-elev);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  padding: 0.75rem 1.1rem;
+  resize: none;
+  max-height: 120px;
+  min-height: 48px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--fg);
+}
+.chat-input:focus { outline: none; border-color: var(--accent); }
+.chat-send {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-fg);
+  display: grid; place-items: center;
+  flex-shrink: 0;
+  transition: transform 0.2s var(--ease-spring);
+}
+.chat-send:active { transform: scale(0.9); }
+.chat-send svg { width: 20px; height: 20px; }
+.chat-suggestions { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.chat-suggestion {
+  font-size: 0.8rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--r-pill);
+  background: var(--bg-sunk);
+  border: 1px solid var(--line);
+  color: var(--fg-soft);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   MODALS / SHEETS
+   ============================================================ */
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 20, 16, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: grid;
+  place-items: end center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s var(--ease-out);
+}
+.scrim.open { opacity: 1; pointer-events: auto; }
+.sheet {
+  width: 100%;
+  max-width: 540px;
+  background: var(--bg-elev);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  padding: 1rem 1.25rem calc(1.5rem + var(--safe-bottom));
+  max-height: 88vh;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.4s var(--ease-out);
+  box-shadow: var(--shadow-lg);
+}
+.scrim.open .sheet { transform: translateY(0); }
+@media (min-width: 768px) {
+  .scrim { place-items: center; }
+  .sheet { border-radius: var(--r-xl); transform: translateY(20px) scale(0.96); max-height: 80vh; }
+  .scrim.open .sheet { transform: translateY(0) scale(1); }
+}
+.sheet-handle {
+  width: 40px; height: 4px;
+  background: var(--line-strong);
+  border-radius: 2px;
+  margin: 0 auto 1rem;
+}
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.sheet-header h3 { font-size: 1.3rem; }
+.sheet-close {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--bg-sunk);
+  display: grid; place-items: center;
+}
+
+/* ============================================================
+   TOASTS / NOTIFICATIONS
+   ============================================================ */
+.toast-stack {
+  position: fixed;
+  top: calc(var(--safe-top) + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: calc(100% - 2rem);
+  max-width: 420px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--bg-elev);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  padding: 0.85rem 1rem;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  pointer-events: auto;
+  animation: toastIn 0.4s var(--ease-spring);
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-12px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.toast.success { border-left: 3px solid var(--success); }
+.toast.warn { border-left: 3px solid var(--warn); }
+.toast.danger { border-left: 3px solid var(--danger); }
+.toast.info { border-left: 3px solid var(--accent); }
+.toast .toast-icon {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+  background: var(--bg-sunk);
+}
+.toast .toast-icon svg { width: 16px; height: 16px; }
+.toast .toast-msg { flex: 1; min-width: 0; }
+.toast .toast-msg small { display: block; color: var(--fg-mute); font-weight: 400; margin-top: 1px; }
+
+/* ============================================================
+   AI FAB
+   ============================================================ */
+.fab {
+  position: fixed;
+  bottom: calc(var(--nav-height) + var(--safe-bottom) + 16px);
+  right: 18px;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--clay);
+  color: white;
+  display: grid; place-items: center;
+  box-shadow: var(--shadow-lg);
+  z-index: 40;
+  transition: transform 0.3s var(--ease-spring);
+  animation: fabFloat 4s ease-in-out infinite;
+}
+.fab:active { transform: scale(0.9); }
+.fab svg { width: 24px; height: 24px; }
+@keyframes fabFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@media (min-width: 900px) {
+  .fab { bottom: 24px; right: 24px; }
+}
+
+/* ============================================================
+   AUTH / LOGIN
+   ============================================================ */
+.auth-screen {
+  min-height: 100vh; min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(160deg, var(--court-green) 0%, var(--court-green-deep) 100%);
+  color: var(--cream);
+}
+.auth-card {
+  background: var(--cream);
+  color: var(--ink);
+  padding: 2rem 1.75rem;
+  border-radius: var(--r-xl);
+  max-width: 400px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+.auth-card .brand-mark { width: 56px; height: 56px; margin: 0 auto 1rem; }
+.auth-card .brand-mark svg { width: 32px; height: 32px; }
+.auth-card h1 {
+  font-size: 2rem;
+  margin-bottom: 0.4rem;
+  font-variation-settings: "opsz" 144, "SOFT" 80;
+}
+.auth-card h1 em { color: var(--clay); font-style: italic; font-weight: 400; }
+.auth-card p { color: var(--fg-soft); margin-bottom: 1.5rem; font-size: 0.92rem; }
+.auth-card .btn { width: 100%; margin-bottom: 0.5rem; }
+.auth-features {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+.auth-feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  color: var(--fg-mute);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.auth-feature svg { width: 22px; height: 22px; color: var(--accent); }
+
+/* "Powered by CYRABELL" — subtle, refined attribution */
+.powered-by {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
+.powered-by .powered-mark {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  color: var(--clay);
+  text-transform: uppercase;
+  position: relative;
+  padding-left: 0.6rem;
+}
+.powered-by .powered-mark::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--brass);
+  transform: translateY(-50%);
+}
+[data-theme="dark"] .powered-by .powered-mark { color: var(--brass); }
+.powered-by-profile {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+.display-board .ds-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2em;
+}
+.display-board .ds-powered {
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 0.9vw, 0.85rem);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--clay-soft);
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* Skeleton */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-sunk) 0%, var(--line-strong) 50%, var(--bg-sunk) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--r-md);
+}
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* ============================================================
+   ADMIN
+   ============================================================ */
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+@media (min-width: 700px) {
+  .admin-grid { grid-template-columns: 1fr 1fr; }
+}
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  background: var(--bg-sunk);
+  padding: 4px;
+  border-radius: var(--r-pill);
+  margin-bottom: 1rem;
+  overflow-x: auto;
+}
+.tab {
+  flex: 1;
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--r-pill);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--fg-soft);
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.tab.active { background: var(--bg-elev); color: var(--fg); box-shadow: var(--shadow-sm); }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.table th {
+  text-align: left;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-mute);
+  font-weight: 600;
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.table td {
+  padding: 0.7rem 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.table tr:last-child td { border-bottom: none; }
+
+/* Empty state */
+.empty {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--fg-mute);
+}
+.empty svg { width: 48px; height: 48px; opacity: 0.4; margin-bottom: 0.5rem; }
+.empty p { font-size: 0.9rem; margin: 0.3rem 0; }
+
+/* Loading spinner */
+.spinner {
+  width: 22px; height: 22px;
+  border: 2.5px solid var(--line-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Switch */
+.switch {
+  position: relative;
+  width: 44px; height: 26px;
+  background: var(--bg-sunk);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong);
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 20px; height: 20px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.3s var(--ease-spring);
+}
+.switch.on { background: var(--accent); }
+.switch.on::after { transform: translateX(18px); }
+
+/* List row */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  background: var(--bg-elev);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  gap: 0.75rem;
+}
+.row + .row { margin-top: 0.4rem; }
+.row .left { flex: 1; min-width: 0; }
+.row .left strong { display: block; font-size: 0.95rem; }
+.row .left small { color: var(--fg-mute); font-size: 0.78rem; }
+
+/* Print-only display improvements */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visible */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+</style>
+</head>
+<body>
+<noscript><p style="padding:2rem;text-align:center;">This app requires JavaScript.</p></noscript>
+
+<!-- ============================================================
+     APP SHELL — rendered dynamically by JS based on auth/route
+     ============================================================ -->
+<div id="root"></div>
+<div id="toast-stack" class="toast-stack"></div>
+<div id="modal-root"></div>
+
+<script>
+/* ==============================================================
+   DINK & DRIVE — Pickleball Club Management
+   Single-file application. Communicates with a Google Apps Script
+   backend (Code.gs) deployed as a Web App.
+   ============================================================== */
+
+/* -------------------------------------------------------------
+   CONFIG
+   ------------------------------------------------------------- */
+const CONFIG = {
+  // ⚙️ PASTE YOUR DEPLOYED APPS SCRIPT WEB APP URL HERE
+  // (Looks like: https://script.google.com/macros/s/AKfycb.../exec)
+  API_URL: localStorage.getItem('https://script.google.com/macros/s/AKfycbxBlylHyMr6t7qZ-ijQrJfD_-Z6J3SsMbfuV2bn29vBUW9ksZc3bbo6spLmo-kgtsQ92g/exec') || '',
+  POLL_INTERVAL_MS: 1500,
+  REMINDER_LEAD_MIN: 30,
+  CLUB_NAME: 'Dink & Drive',
+  CLUB_CITY: 'Iligan City',
+  COURT_DEFAULTS: ['Court Alpha', 'Court Bravo', 'Court Charlie', 'Court Delta'],
+  TIME_SLOTS: ['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'],
+  PRICE_PER_HOUR: 350,
+  CURRENCY: '\u20B1',
+};
+
+/* -------------------------------------------------------------
+   STATE
+   ------------------------------------------------------------- */
+const State = {
+  user: null,
+  route: 'book',
+  courts: [],
+  bookings: [],
+  payments: [],
+  scores: [],
+  notifications: [],
+  currentMatch: null,
+  bleDevice: null,
+  bleConnected: false,
+  apiHealthy: true,
+  selectedDate: new Date(),
+  calCursor: new Date(),
+  chatHistory: [],
+  theme: localStorage.getItem('dink.theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
+  isDisplayMode: new URLSearchParams(location.search).get('display') === 'true',
+  displayMatchId: new URLSearchParams(location.search).get('match') || null,
+};
+
+/* -------------------------------------------------------------
+   UTILITIES
+   ------------------------------------------------------------- */
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const el = (tag, attrs = {}, ...children) => {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') node.className = v;
+    else if (k === 'style' && typeof v === 'object') Object.assign(node.style, v);
+    else if (k.startsWith('on') && typeof v === 'function') node.addEventListener(k.slice(2).toLowerCase(), v);
+    else if (k === 'html') node.innerHTML = v;
+    else if (v != null && v !== false) node.setAttribute(k, v);
+  }
+  for (const c of children.flat()) {
+    if (c == null || c === false) continue;
+    node.appendChild(c instanceof Node ? c : document.createTextNode(String(c)));
+  }
+  return node;
+};
+const fmtDate = (d, opts = {}) => new Date(d).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', ...opts });
+const fmtTime = (t) => t;
+const fmtMoney = (n) => `${CONFIG.CURRENCY}${Number(n).toLocaleString('en-PH', { minimumFractionDigits: 0 })}`;
+const ymd = (d) => {
+  const x = new Date(d);
+  return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`;
+};
+const uid = () => 'id_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
+const sanitize = (s) => String(s ?? '').replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+const haptic = (ms = 8) => { if (navigator.vibrate) navigator.vibrate(ms); };
+
+/* -------------------------------------------------------------
+   ICONS
+   ------------------------------------------------------------- */
+const ICONS = {
+  paddle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="9" r="6"/><circle cx="10" cy="9" r="6" stroke-dasharray="1 2"/><path d="m14.5 13.5 6 7M13 15l2 2"/></svg>',
+  calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+  trophy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12v5a6 6 0 1 1-12 0V4Z"/><path d="M6 8H4a2 2 0 0 1-2-2 2 2 0 0 1 2-2h2M18 8h2a2 2 0 0 0 2-2 2 2 0 0 0-2-2h-2M9 20h6M12 15v5"/></svg>',
+  chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12Z"/></svg>',
+  user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',
+  bell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 1 1 12 0c0 5 2 6 2 8H4c0-2 2-3 2-8Z"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>',
+  moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10Z"/></svg>',
+  sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>',
+  close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>',
+  send: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.4 20.6 22 12 3.4 3.4 3.4 10 17 12 3.4 14z"/></svg>',
+  bluetooth: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>',
+  cast: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/><path d="M2 12a8 8 0 0 1 8 8M2 16a4 4 0 0 1 4 4M2 20h.01"/></svg>',
+  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  forward: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  card: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>',
+  shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>',
+  sparkle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></svg>',
+  download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>',
+  refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg>',
+  camera: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.6-2h6.4l1.6 2H19a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Z"/><circle cx="12" cy="13" r="4"/></svg>',
+  gallery: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>',
+  flip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v4a2 2 0 0 0 2 2h14M21 17v-4a2 2 0 0 0-2-2H5"/><path d="m7 3-4 4 4 4M17 21l4-4-4-4"/></svg>',
+};
+
+/* -------------------------------------------------------------
+   API CLIENT
+   ------------------------------------------------------------- */
+const API = {
+  async call(action, payload = {}, opts = {}) {
+    if (!CONFIG.API_URL) {
+      return MockAPI.call(action, payload);
+    }
+    try {
+      const body = JSON.stringify({
+        action,
+        token: State.user?.token || null,
+        email: State.user?.email || null,
+        payload,
+      });
+      const res = await fetch(CONFIG.API_URL, {
+        method: 'POST',
+        body,
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        redirect: 'follow',
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      State.apiHealthy = true;
+      if (data.error) throw new Error(data.error);
+      return data.result;
+    } catch (err) {
+      State.apiHealthy = false;
+      console.warn('[API]', action, err.message);
+      if (opts.fallbackToMock !== false) return MockAPI.call(action, payload);
+      throw err;
+    }
+  },
+};
+
+/* -------------------------------------------------------------
+   MOCK API
+   ------------------------------------------------------------- */
+const MockAPI = (() => {
+  const KEY = 'dink.mock.db';
+  const seed = () => {
+    const courts = CONFIG.COURT_DEFAULTS.map((name, i) => ({
+      id: 'court_' + (i+1),
+      name,
+      surface: ['Cushioned acrylic', 'Hardwood indoor', 'Asphalt outdoor', 'Sport tile'][i % 4],
+      active: true,
+    }));
+    return { users: [], courts, bookings: [], payments: [], scores: [], notifications: [], chatLogs: [] };
+  };
+  const load = () => {
+    try { return JSON.parse(localStorage.getItem(KEY)) || seed(); } catch { return seed(); }
+  };
+  const save = (db) => localStorage.setItem(KEY, JSON.stringify(db));
+  let db = load();
+
+  return {
+    async call(action, p = {}) {
+      await new Promise(r => setTimeout(r, 120));
+      const me = State.user?.email || 'guest@dinkdrive.club';
+      switch (action) {
+        case 'login': {
+          const role = (p.email || '').includes('admin') ? 'admin' : 'player';
+          return { email: p.email, name: p.name || p.email.split('@')[0], role, token: 'mock_' + uid() };
+        }
+        case 'getCourts': return db.courts;
+        case 'getBookings': return db.bookings;
+        case 'createBooking': {
+          const b = { id: uid(), ...p, owner: me, createdAt: Date.now(), status: 'confirmed' };
+          db.bookings.push(b);
+          db.payments.push({ id: uid(), bookingId: b.id, owner: me, amount: p.price || CONFIG.PRICE_PER_HOUR, status: 'pending', createdAt: Date.now() });
+          save(db);
+          return b;
+        }
+        case 'cancelBooking': {
+          const idx = db.bookings.findIndex(b => b.id === p.id);
+          if (idx >= 0) db.bookings.splice(idx, 1);
+          save(db); return { ok: true };
+        }
+        case 'getPayments': return db.payments;
+        case 'payBooking': {
+          const pmt = db.payments.find(x => x.bookingId === p.bookingId);
+          if (pmt) { pmt.status = 'paid'; pmt.paidAt = Date.now(); pmt.method = p.method || 'card'; }
+          save(db); return pmt;
+        }
+        case 'getScores': return db.scores;
+        case 'saveScore': {
+          const existing = db.scores.find(s => s.id === p.id);
+          if (existing) Object.assign(existing, p);
+          else db.scores.push({ ...p, createdAt: Date.now() });
+          save(db); return p;
+        }
+        case 'getLiveScore': return db.scores.find(s => s.id === p.id) || null;
+        case 'getNotifications': return db.notifications.slice(-50).reverse();
+        case 'addNotification': {
+          db.notifications.push({ id: uid(), ...p, createdAt: Date.now(), read: false });
+          save(db); return { ok: true };
+        }
+        case 'markRead': {
+          const n = db.notifications.find(x => x.id === p.id);
+          if (n) n.read = true; save(db); return { ok: true };
+        }
+        case 'chat': {
+          const reply = LocalAI.respond(p.message, p.context);
+          db.chatLogs.push({ id: uid(), user: me, message: p.message, reply, at: Date.now() });
+          save(db);
+          return { reply, source: 'local' };
+        }
+        case 'getUsers': return db.users;
+        case 'getLogs': return db.notifications.slice(-100).reverse();
+        default: return null;
+      }
+    },
+  };
+})();
+
+/* -------------------------------------------------------------
+   LOCAL AI
+   ------------------------------------------------------------- */
+const LocalAI = {
+  respond(message, ctx = {}) {
+    const m = message.toLowerCase().trim();
+    const me = ctx.user || State.user;
+    const bookings = ctx.bookings || State.bookings;
+    const score = ctx.score || State.currentMatch;
+
+    if (/\b(rule|score|how.*play|win)\b/.test(m) && !/\bbook|reserve\b/.test(m)) {
+      return "Quick refresher on pickleball: matches are usually played to **11 points, win by 2**. Tournaments often go to 15 or 21. In **traditional scoring** only the serving side can score; in **rally scoring**, every rally produces a point. The serve must be underhand, contact below the waist, and the first serve of each side-out starts in the right-hand court. Want me to walk through faults or the kitchen rule?";
+    }
+    if (/\bkitchen|non.?volley\b/.test(m)) {
+      return "The **kitchen** (non-volley zone) is the 7-foot area on each side of the net. You can't volley the ball — hitting it out of the air — while standing in or touching the kitchen. You *can* step in to play a ball after it bounces. A common fault: momentum carries you into the kitchen after a volley. That's still a fault.";
+    }
+    if (/\b(book|reserve|reservation)\b/.test(m)) {
+      const upcoming = bookings.filter(b => b.owner === me?.email).slice(0, 2);
+      if (upcoming.length) {
+        return `You have ${upcoming.length} upcoming ${upcoming.length === 1 ? 'booking' : 'bookings'}: ${upcoming.map(b => `${b.courtName} on ${fmtDate(b.date)} at ${b.time}`).join(', ')}. Tap **Book** in the navigation to add another, or **Calendar** to manage existing reservations.`;
+      }
+      return "To book a court: head to **Book** in the bottom navigation, pick a court, choose a date, then tap an available time slot. Need recurring bookings? Toggle the *Repeat weekly* option in the booking sheet.";
+    }
+    if (/\b(score|game|match).*now|current.*match|live\b/.test(m)) {
+      if (score) {
+        const isSeries = score.matchType && score.matchType !== 'single';
+        const seriesLine = isSeries
+          ? ` Series score **${score.teamA.setsWon || 0}–${score.teamB.setsWon || 0}** in a ${score.matchType === 'bo5' ? 'best of 5' : 'best of 3'} (set ${score.currentSet}).`
+          : '';
+        return `Current match: **${score.teamA.name} ${score.teamA.score} — ${score.teamB.score} ${score.teamB.name}**.${seriesLine} ${score.teamA.score >= 11 || score.teamB.score >= 11 ? 'Win-by-two zone — every point matters.' : 'Serving side scores in traditional play.'}`;
+      }
+      return "No live match running right now. Start one from the **Scores** tab. You can also pair a Bluetooth remote to score hands-free.";
+    }
+    if (/\b(coach|tip|advice|improve|better)\b/.test(m)) {
+      const tips = [
+        "Master the **third-shot drop**. After the serve and return, a soft drop into the kitchen forces opponents to hit up, letting you advance to the net.",
+        "Keep your **paddle up and ready** in front of your chest at the kitchen line. Quick hands win fast exchanges.",
+        "Aim for the **opponent's feet** and **backhand**. Low balls are harder to attack.",
+        "Move as a unit with your partner — imagine you're tied together by a 10-foot rope.",
+        "When in doubt, **dink, don't bang**. Patience beats power at the net.",
+      ];
+      return tips[Math.floor(Math.random() * tips.length)] + " Want a tip on serves, returns, or strategy?";
+    }
+    if (/\b(pay|payment|bill|owe)\b/.test(m)) {
+      return "Payments are tracked in your **Profile** tab. Outstanding bookings show as *pending* until paid. We accept card and mobile wallet via the secure mock checkout. Real Stripe/PayPal can be enabled in the admin settings.";
+    }
+    if (/^(hi|hello|hey|yo|sup)\b/.test(m)) {
+      return `Hello${me?.name ? `, ${me.name.split(' ')[0]}` : ''}! 🏓 I can help you book courts, explain rules, give coaching tips, or pull up your schedule. What's on your mind?`;
+    }
+    if (/\b(thank|thanks|thx)\b/.test(m)) {
+      return "Anytime. Good luck on the courts — keep the paddle up!";
+    }
+    if (/\bbluetooth|remote|button\b/.test(m)) {
+      return "Yes! Open **Scores** → tap the Bluetooth icon to pair a BLE button remote. Button A increments Team A; Button B increments Team B. Useful for fast point-by-point scoring without touching the screen. Falls back to manual buttons if no device is paired.";
+    }
+    if (/\bdisplay|cast|tv|mirror|screen\b/.test(m)) {
+      return "Start a match, then tap the **Cast** icon to open a fullscreen scoreboard in a new tab. Use your browser's *cast to TV* (Chrome → cast) or AirPlay to mirror it to any screen. The board auto-refreshes from the server so multiple screens stay in sync.";
+    }
+    return "I can help with **bookings**, **rules**, **scoring**, **coaching tips**, **payments**, or **club info**. What would you like to know?";
+  },
+};
+
+/* -------------------------------------------------------------
+   TOAST
+   ------------------------------------------------------------- */
+const Toast = {
+  show({ title, msg = '', type = 'info', duration = 3800 }) {
+    const stack = $('#toast-stack');
+    const iconMap = { success: ICONS.check, warn: ICONS.bell, danger: ICONS.close, info: ICONS.sparkle };
+    const t = el('div', { class: `toast ${type}` },
+      el('div', { class: 'toast-icon', html: iconMap[type] || ICONS.sparkle }),
+      el('div', { class: 'toast-msg' },
+        el('div', {}, title),
+        msg ? el('small', {}, msg) : null,
+      ),
+    );
+    stack.appendChild(t);
+    haptic(type === 'danger' ? 30 : 10);
+    setTimeout(() => {
+      t.style.transition = 'opacity 0.3s, transform 0.3s';
+      t.style.opacity = '0';
+      t.style.transform = 'translateY(-8px)';
+      setTimeout(() => t.remove(), 300);
+    }, duration);
+  },
+};
+
+/* -------------------------------------------------------------
+   MODAL
+   ------------------------------------------------------------- */
+const Modal = {
+  open({ title, body, actions = [] }) {
+    const root = $('#modal-root');
+    const closeFn = () => {
+      scrim.classList.remove('open');
+      setTimeout(() => scrim.remove(), 300);
+    };
+    const sheet = el('div', { class: 'sheet', onClick: (e) => e.stopPropagation() },
+      el('div', { class: 'sheet-handle' }),
+      el('div', { class: 'sheet-header' },
+        el('h3', {}, title),
+        el('button', { class: 'sheet-close icon-btn', 'aria-label': 'Close', onClick: closeFn, html: ICONS.close }),
+      ),
+      body,
+      actions.length ? el('div', { class: 'stack', style: { marginTop: '1rem' } },
+        ...actions.map(a => el('button', { class: `btn ${a.class || 'btn-primary'} btn-block`, onClick: () => { a.onClick?.(closeFn); } }, a.label))
+      ) : null,
+    );
+    const scrim = el('div', { class: 'scrim', onClick: closeFn }, sheet);
+    root.appendChild(scrim);
+    requestAnimationFrame(() => scrim.classList.add('open'));
+    return closeFn;
+  },
+};
+
+/* -------------------------------------------------------------
+   THEME
+   ------------------------------------------------------------- */
+const Theme = {
+  apply() {
+    document.documentElement.setAttribute('data-theme', State.theme);
+    localStorage.setItem('dink.theme', State.theme);
+  },
+  toggle() {
+    State.theme = State.theme === 'dark' ? 'light' : 'dark';
+    this.apply();
+    Render.topbar();
+  },
+};
+
+/* -------------------------------------------------------------
+   NOTIFICATIONS
+   ------------------------------------------------------------- */
+const Notify = {
+  async requestPermission() {
+    if (!('Notification' in window)) return false;
+    if (Notification.permission === 'granted') return true;
+    if (Notification.permission === 'denied') return false;
+    const p = await Notification.requestPermission();
+    return p === 'granted';
+  },
+  async push({ title, body, tag }) {
+    Toast.show({ title, msg: body, type: 'info' });
+    API.call('addNotification', { title, body, channel: 'push', recipient: State.user?.email });
+    if ((await this.requestPermission()) && document.visibilityState !== 'visible') {
+      try {
+        new Notification(title, { body, tag: tag || uid(), silent: false });
+      } catch {}
+    }
+  },
+  scheduleReminder(booking) {
+    const when = new Date(`${booking.date}T${booking.time}:00`).getTime() - CONFIG.REMINDER_LEAD_MIN * 60000;
+    const delay = when - Date.now();
+    if (delay > 0 && delay < 24 * 3600 * 1000) {
+      setTimeout(() => this.push({
+        title: `Court reminder · ${booking.courtName}`,
+        body: `Your match starts in ${CONFIG.REMINDER_LEAD_MIN} minutes. ${booking.time}, ${fmtDate(booking.date)}.`,
+        tag: 'rem_' + booking.id,
+      }), delay);
+    }
+  },
+};
+
+/* -------------------------------------------------------------
+   BLUETOOTH
+   ------------------------------------------------------------- */
+const BLE = {
+  async connect() {
+    if (!('bluetooth' in navigator)) {
+      Toast.show({ title: 'Bluetooth unavailable', msg: 'Web Bluetooth is not supported in this browser.', type: 'warn' });
+      return false;
+    }
+    try {
+      const device = await navigator.bluetooth.requestDevice({
+        acceptAllDevices: true,
+        optionalServices: ['battery_service', 0xFFE0, 0x1812, '0000ffe0-0000-1000-8000-00805f9b34fb'],
+      });
+      Toast.show({ title: 'Pairing…', msg: device.name || 'Unnamed device', type: 'info' });
+      const server = await device.gatt.connect();
+      State.bleDevice = device;
+      State.bleConnected = true;
+
+      const services = await server.getPrimaryServices();
+      let attached = false;
+      for (const svc of services) {
+        try {
+          const chars = await svc.getCharacteristics();
+          for (const ch of chars) {
+            if (ch.properties.notify) {
+              await ch.startNotifications();
+              ch.addEventListener('characteristicvaluechanged', (e) => BLE.onPress(e));
+              attached = true;
+            }
+          }
+        } catch {}
+      }
+      device.addEventListener('gattserverdisconnected', () => {
+        State.bleConnected = false;
+        State.bleDevice = null;
+        Toast.show({ title: 'Bluetooth disconnected', type: 'warn' });
+        Render.current();
+      });
+      Toast.show({ title: attached ? 'Remote paired' : 'Connected (no notify)', msg: device.name, type: 'success' });
+      Render.current();
+      return true;
+    } catch (e) {
+      Toast.show({ title: 'Bluetooth pairing cancelled', type: 'warn' });
+      return false;
+    }
+  },
+  onPress(e) {
+    if (!State.currentMatch) return;
+    const v = new Uint8Array(e.target.value.buffer);
+    const byte = v[0] || 0;
+    const isA = byte === 0 || byte % 2 === 0;
+    Scoring.point(isA ? 'A' : 'B');
+    haptic(15);
+  },
+  disconnect() {
+    try { State.bleDevice?.gatt?.disconnect(); } catch {}
+    State.bleConnected = false;
+    State.bleDevice = null;
+    Render.current();
+  },
+};
+
+/* -------------------------------------------------------------
+   CAMERA — phone-camera photo capture for player avatars
+   ------------------------------------------------------------- */
+const Camera = {
+  // Compress a photo to ~256px JPEG so it fits in localStorage / Sheet rows
+  MAX_DIM: 256,
+  JPEG_QUALITY: 0.78,
+
+  // Resize + crop a square JPEG data URL from a video frame or image
+  async snapshotFromVideo(video) {
+    const size = Math.min(video.videoWidth, video.videoHeight) || 480;
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = this.MAX_DIM;
+    const ctx = canvas.getContext('2d');
+    // Center-crop square
+    const sx = (video.videoWidth - size) / 2;
+    const sy = (video.videoHeight - size) / 2;
+    ctx.drawImage(video, sx, sy, size, size, 0, 0, this.MAX_DIM, this.MAX_DIM);
+    return canvas.toDataURL('image/jpeg', this.JPEG_QUALITY);
+  },
+
+  async snapshotFromFile(file) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const size = Math.min(img.naturalWidth, img.naturalHeight);
+        const canvas = document.createElement('canvas');
+        canvas.width = canvas.height = this.MAX_DIM;
+        const ctx = canvas.getContext('2d');
+        const sx = (img.naturalWidth - size) / 2;
+        const sy = (img.naturalHeight - size) / 2;
+        ctx.drawImage(img, sx, sy, size, size, 0, 0, this.MAX_DIM, this.MAX_DIM);
+        resolve(canvas.toDataURL('image/jpeg', this.JPEG_QUALITY));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image load failed')); };
+      img.src = url;
+    });
+  },
+
+  /**
+   * Open the capture sheet. Returns a Promise that resolves with a
+   * data URL string (the JPEG) or null if cancelled.
+   *
+   * Strategy:
+   *  1. Try getUserMedia(facingMode: 'user') for an in-app live preview.
+   *  2. Fall back to a hidden <input type="file" capture="user"> which
+   *     uses the native camera app on iOS/Android browsers without
+   *     mediaDevices support.
+   */
+  open({ title = 'Take photo', subtitle = '' } = {}) {
+    return new Promise((resolve) => {
+      let stream = null;
+      let dataUrl = null;
+      let facingMode = 'user';
+
+      const stage = el('div', { class: 'camera-stage' });
+      const video = el('video', { autoplay: '', playsinline: '', muted: '' });
+      const preview = el('img', { alt: 'Captured', style: { display: 'none' } });
+      const frame = el('div', { class: 'camera-frame' });
+      const empty = el('div', { class: 'camera-empty', html:
+        ICONS.camera + '<div>Live preview unavailable.<br><small>Use the buttons below to take a photo or pick from your gallery.</small></div>' });
+      stage.append(empty, video, preview, frame);
+
+      // Two separate file inputs: one for camera, one for gallery
+      // (the `capture` attribute is what makes mobile open the camera vs gallery)
+      const fileInputCamera = el('input', {
+        type: 'file',
+        accept: 'image/*',
+        capture: 'user',
+        style: { display: 'none' },
+      });
+      const fileInputGallery = el('input', {
+        type: 'file',
+        accept: 'image/*',
+        style: { display: 'none' },
+      });
+      const handleFile = async (e) => {
+        const f = e.target.files && e.target.files[0];
+        e.target.value = ''; // allow re-select of same file
+        if (!f) return;
+        if (!f.type.startsWith('image/')) {
+          Toast.show({ title: 'Not an image file', msg: 'Please choose a JPG or PNG.', type: 'warn' });
+          return;
+        }
+        if (f.size > 20 * 1024 * 1024) {
+          Toast.show({ title: 'File too large', msg: 'Please pick an image under 20 MB.', type: 'warn' });
+          return;
+        }
+        try {
+          dataUrl = await Camera.snapshotFromFile(f);
+          showPreview();
+        } catch (err) {
+          Toast.show({ title: 'Photo failed', msg: err.message, type: 'danger' });
+        }
+      };
+      fileInputCamera.addEventListener('change', handleFile);
+      fileInputGallery.addEventListener('change', handleFile);
+
+      const shutterBtn = el('button', { class: 'shutter', 'aria-label': 'Capture' });
+      const flipBtn = el('button', { class: 'icon-btn', 'aria-label': 'Flip camera', html: ICONS.flip });
+      const cameraBtn = el('button', { class: 'btn btn-sm btn-secondary', html: ICONS.camera + '<span>Phone camera</span>',
+        onClick: () => fileInputCamera.click() });
+      const galleryBtn = el('button', { class: 'btn btn-sm btn-secondary', html: ICONS.gallery + '<span>From gallery</span>',
+        onClick: () => fileInputGallery.click() });
+      const retakeBtn = el('button', { class: 'btn btn-sm btn-secondary', html: ICONS.refresh + '<span>Choose again</span>',
+        style: { display: 'none' }, onClick: () => startStream() });
+
+      const controls = el('div', { class: 'camera-controls' }, flipBtn, shutterBtn, cameraBtn, galleryBtn);
+      const controls2 = el('div', { class: 'camera-controls', style: { display: 'none' } }, retakeBtn);
+
+      async function startStream() {
+        stopStream();
+        dataUrl = null;
+        video.style.display = '';
+        preview.style.display = 'none';
+        empty.style.display = 'none';
+        shutterBtn.classList.remove('captured');
+        controls.style.display = '';
+        controls2.style.display = 'none';
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          // Fall back to file capture button only
+          video.style.display = 'none';
+          empty.style.display = '';
+          flipBtn.style.display = 'none';
+          shutterBtn.style.display = 'none';
+          return;
+        }
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode, width: { ideal: 640 }, height: { ideal: 640 } },
+            audio: false,
+          });
+          video.srcObject = stream;
+          stage.classList.toggle('no-mirror', facingMode === 'environment');
+        } catch (err) {
+          // Permission denied or no camera — show fallback
+          video.style.display = 'none';
+          empty.style.display = '';
+          flipBtn.style.display = 'none';
+          shutterBtn.style.display = 'none';
+          Toast.show({ title: 'Camera blocked', msg: 'Use the phone-camera button instead.', type: 'warn' });
+        }
+      }
+      function stopStream() {
+        if (stream) {
+          stream.getTracks().forEach(t => t.stop());
+          stream = null;
+        }
+      }
+      async function capture() {
+        if (!stream) return;
+        try {
+          dataUrl = await Camera.snapshotFromVideo(video);
+          showPreview();
+          haptic(20);
+        } catch (err) {
+          Toast.show({ title: 'Capture failed', msg: err.message, type: 'danger' });
+        }
+      }
+      function showPreview() {
+        preview.src = dataUrl;
+        preview.style.display = '';
+        video.style.display = 'none';
+        empty.style.display = 'none';
+        shutterBtn.classList.add('captured');
+        controls.style.display = 'none';
+        controls2.style.display = '';
+        stopStream();
+      }
+
+      shutterBtn.onclick = capture;
+      flipBtn.onclick = () => {
+        facingMode = facingMode === 'user' ? 'environment' : 'user';
+        startStream();
+      };
+
+      const body = el('div', {},
+        subtitle ? el('p', { style: { color: 'var(--fg-soft)', fontSize: '0.88rem', marginTop: 0, textAlign: 'center' } }, subtitle) : null,
+        stage,
+        controls,
+        controls2,
+        fileInputCamera,
+        fileInputGallery,
+      );
+
+      const close = Modal.open({
+        title,
+        body,
+        actions: [
+          { label: 'Use this photo', class: 'btn-primary', onClick: (closeFn) => {
+            if (!dataUrl) {
+              Toast.show({ title: 'Take a photo first', type: 'warn' });
+              return;
+            }
+            stopStream();
+            closeFn();
+            resolve(dataUrl);
+          }},
+          { label: 'Cancel', class: 'btn-ghost', onClick: (closeFn) => {
+            stopStream();
+            closeFn();
+            resolve(null);
+          }},
+        ],
+      });
+
+      // Kick off the stream after the sheet has appeared
+      requestAnimationFrame(() => { setTimeout(startStream, 200); });
+    });
+  },
+};
+
+/* -------------------------------------------------------------
+   SCORING
+   ------------------------------------------------------------- */
+const Scoring = {
+  // Map match type to "sets needed to win the series"
+  setsToWin(matchType) {
+    return matchType === 'bo5' ? 3 : (matchType === 'bo3' ? 2 : 1);
+  },
+  totalSets(matchType) {
+    return matchType === 'bo5' ? 5 : (matchType === 'bo3' ? 3 : 1);
+  },
+
+  newMatch({ teamA, teamB, format = 'doubles', target = 11, winBy = 2, scoring = 'traditional', courtName = '', matchType = 'single' }) {
+    // photos is an array of up to 2 data URLs (one per player).
+    // sets[] fills as each set completes; score* is the live in-progress set.
+    State.currentMatch = {
+      id: 'match_' + uid(),
+      teamA: {
+        name: teamA.name, players: teamA.players,
+        photos: (teamA.photos || []).slice(0, 2),
+        score: 0, serverNum: 1, setsWon: 0,
+      },
+      teamB: {
+        name: teamB.name, players: teamB.players,
+        photos: (teamB.photos || []).slice(0, 2),
+        score: 0, serverNum: 1, setsWon: 0,
+      },
+      serving: 'A',
+      format, target, winBy, scoring, matchType,
+      sets: [],              // completed sets: [{ a, b, winner: 'A'|'B' }]
+      currentSet: 1,
+      courtName,
+      startedAt: Date.now(),
+      history: [],
+      winner: null,
+    };
+    this.save();
+    return State.currentMatch;
+  },
+
+  setTeamPhoto(side, slotIndex, dataUrl) {
+    const m = State.currentMatch;
+    if (!m) return;
+    const team = m[`team${side}`];
+    if (!Array.isArray(team.photos)) team.photos = [];
+    if (dataUrl) team.photos[slotIndex] = dataUrl;
+    else team.photos[slotIndex] = '';
+    // Trim trailing empties for cleanliness
+    while (team.photos.length && !team.photos[team.photos.length - 1]) team.photos.pop();
+    this.save();
+    Render.current();
+  },
+  point(side) {
+    const m = State.currentMatch;
+    if (!m || m.winner) return;
+    // Snapshot full state for undo (so we can roll back set transitions)
+    m.history.push({
+      side,
+      a: m.teamA.score, b: m.teamB.score,
+      setsA: m.teamA.setsWon, setsB: m.teamB.setsWon,
+      currentSet: m.currentSet,
+      server: m.serving,
+      serverNumA: m.teamA.serverNum, serverNumB: m.teamB.serverNum,
+      setsSnapshot: m.sets.length,
+    });
+    if (m.scoring === 'rally') {
+      m[`team${side}`].score++;
+      m.serving = side;
+    } else {
+      if (m.serving === side) {
+        m[`team${side}`].score++;
+      } else {
+        if (m.format === 'doubles' && m[`team${m.serving}`].serverNum === 1) {
+          m[`team${m.serving}`].serverNum = 2;
+        } else {
+          m[`team${m.serving}`].serverNum = 1;
+          m.serving = side;
+        }
+      }
+    }
+    const a = m.teamA.score, b = m.teamB.score;
+    if ((a >= m.target || b >= m.target) && Math.abs(a - b) >= m.winBy) {
+      const setWinner = a > b ? 'A' : 'B';
+      m.sets.push({ a, b, winner: setWinner });
+      m[`team${setWinner}`].setsWon++;
+      const needed = this.setsToWin(m.matchType);
+
+      if (m[`team${setWinner}`].setsWon >= needed) {
+        // Series complete
+        m.winner = setWinner;
+        const seriesScore = `${m.teamA.setsWon}–${m.teamB.setsWon}`;
+        const setSummary = m.sets.map(s => `${s.a}–${s.b}`).join(', ');
+        const matchLabel = m.matchType === 'single'
+          ? `Final ${a}–${b}`
+          : `Sets ${seriesScore} (${setSummary})`;
+        Toast.show({ title: `🏆 ${m[`team${setWinner}`].name} wins!`, msg: matchLabel, type: 'success', duration: 6000 });
+        Notify.push({ title: 'Match complete', body: `${m[`team${setWinner}`].name}: ${matchLabel}` });
+      } else {
+        // Set won — reset for next set
+        Toast.show({
+          title: `Set ${m.currentSet} · ${m[`team${setWinner}`].name}`,
+          msg: `${a}–${b} · Series ${m.teamA.setsWon}–${m.teamB.setsWon}`,
+          type: 'success', duration: 4500,
+        });
+        m.currentSet++;
+        m.teamA.score = 0;
+        m.teamB.score = 0;
+        m.teamA.serverNum = 1;
+        m.teamB.serverNum = 1;
+        // Set winner serves first in the next set
+        m.serving = setWinner;
+      }
+    }
+    this.save();
+    Render.current();
+  },
+  undo() {
+    const m = State.currentMatch;
+    if (!m || !m.history.length) return;
+    const last = m.history.pop();
+    m.teamA.score = last.a;
+    m.teamB.score = last.b;
+    m.teamA.setsWon = last.setsA;
+    m.teamB.setsWon = last.setsB;
+    m.currentSet = last.currentSet;
+    m.serving = last.server;
+    m.teamA.serverNum = last.serverNumA;
+    m.teamB.serverNum = last.serverNumB;
+    while (m.sets.length > last.setsSnapshot) m.sets.pop();
+    m.winner = null;
+    this.save();
+    Render.current();
+  },
+  reset() {
+    if (!State.currentMatch) return;
+    Modal.open({
+      title: 'Reset match?',
+      body: el('p', { style: { color: 'var(--fg-soft)' } }, 'This clears the current score. The match record will be wiped.'),
+      actions: [
+        { label: 'Reset', class: 'btn-accent', onClick: (close) => {
+          State.currentMatch = null;
+          this.save();
+          close(); Render.current();
+        }},
+        { label: 'Cancel', class: 'btn-ghost', onClick: (close) => close() },
+      ],
+    });
+  },
+  save() {
+    if (!State.currentMatch) return;
+    API.call('saveScore', State.currentMatch);
+  },
+};
+
+/* -------------------------------------------------------------
+   DATA LOADING
+   ------------------------------------------------------------- */
+async function loadAll() {
+  const [courts, bookings, payments, notifications] = await Promise.all([
+    API.call('getCourts'),
+    API.call('getBookings'),
+    API.call('getPayments'),
+    API.call('getNotifications'),
+  ]);
+  State.courts = courts || [];
+  State.bookings = bookings || [];
+  State.payments = payments || [];
+  State.notifications = notifications || [];
+}
+
+/* -------------------------------------------------------------
+   AUTH
+   ------------------------------------------------------------- */
+const Auth = {
+  async signIn(email, name) {
+    if (!email || !email.includes('@')) {
+      Toast.show({ title: 'Invalid email', type: 'danger' });
+      return;
+    }
+    const user = await API.call('login', { email, name });
+    State.user = user;
+    localStorage.setItem('dink.user', JSON.stringify(user));
+    Render.app();
+  },
+  signOut() {
+    State.user = null;
+    State.currentMatch = null;
+    localStorage.removeItem('dink.user');
+    Render.app();
+  },
+  restore() {
+    try {
+      const saved = localStorage.getItem('dink.user');
+      if (saved) State.user = JSON.parse(saved);
+    } catch {}
+  },
+};
+
+/* =============================================================
+   RENDERING
+   ============================================================= */
+const Render = {
+  async app() {
+    if (State.isDisplayMode) {
+      document.body.classList.add('display-mode');
+      this.displayBoard();
+      return;
+    }
+    if (!State.user) {
+      this.authScreen();
+      return;
+    }
+    await loadAll();
+    this.shell();
+    this.current();
+  },
+
+  authScreen() {
+    const root = $('#root');
+    root.innerHTML = '';
+    root.appendChild(
+      el('div', { class: 'auth-screen' },
+        el('div', { class: 'auth-card' },
+          el('div', { class: 'brand-mark', html: `<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" fill="#E8B647"/><circle cx="12" cy="12" r="8" stroke="#0F3D2E" stroke-width="1" stroke-dasharray="2 2" fill="none"/></svg>` }),
+          el('h1', { html: 'Dink &amp; <em>Drive</em>' }),
+          el('p', {}, 'Premium pickleball club management. Book, score, and play.'),
+          el('div', { class: 'field' },
+            el('label', {}, 'Your name'),
+            el('input', { class: 'input', id: 'auth-name', placeholder: 'e.g. Maria Santos', autocomplete: 'name' }),
+          ),
+          el('div', { class: 'field' },
+            el('label', {}, 'Email address'),
+            el('input', { class: 'input', id: 'auth-email', type: 'email', placeholder: 'you@example.com', autocomplete: 'email' }),
+          ),
+          el('button', { class: 'btn btn-primary', onClick: () => {
+            const email = $('#auth-email').value.trim();
+            const name = $('#auth-name').value.trim() || email.split('@')[0];
+            Auth.signIn(email, name);
+          }}, 'Enter the club'),
+          el('button', { class: 'btn btn-ghost', onClick: () => Auth.signIn('guest@dinkdrive.club', 'Guest Player') },
+            'Continue as guest'
+          ),
+          el('div', { class: 'auth-features' },
+            el('div', { class: 'auth-feature', html: ICONS.calendar + '<span>Book courts</span>' }),
+            el('div', { class: 'auth-feature', html: ICONS.trophy + '<span>Score live</span>' }),
+            el('div', { class: 'auth-feature', html: ICONS.shield + '<span>Secure</span>' }),
+          ),
+          el('div', { class: 'powered-by' },
+            el('span', {}, 'Powered by'),
+            el('span', { class: 'powered-mark' }, 'CYRABELL'),
+          ),
+        ),
+      )
+    );
+    setTimeout(() => {
+      ['auth-name', 'auth-email'].forEach(id => {
+        $('#' + id)?.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            const email = $('#auth-email').value.trim();
+            const name = $('#auth-name').value.trim() || email.split('@')[0];
+            Auth.signIn(email, name);
+          }
+        });
+      });
+    }, 0);
+  },
+
+  shell() {
+    const root = $('#root');
+    root.innerHTML = '';
+    const app = el('div', { id: 'app' });
+    app.appendChild(this.topbarNode());
+    const view = el('main', { id: 'view-root', class: 'view' });
+    app.appendChild(view);
+    app.appendChild(this.navNode());
+    app.appendChild(el('button', {
+      class: 'fab', 'aria-label': 'Open AI assistant',
+      html: ICONS.sparkle,
+      onClick: () => { State.route = 'chat'; Render.current(); }
+    }));
+    root.appendChild(app);
+  },
+
+  topbarNode() {
+    const unreadCount = (State.notifications || []).filter(n => !n.read).length;
+    return el('header', { class: 'topbar' },
+      el('div', { class: 'brand' },
+        el('div', { class: 'brand-mark', html: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="#E8B647"/><circle cx="12" cy="12" r="8" stroke="#0F3D2E" stroke-width="1" stroke-dasharray="2 2" fill="none"/></svg>` }),
+        el('span', { html: 'Dink <em>&amp; Drive</em>' }),
+      ),
+      el('div', { class: 'topbar-actions' },
+        el('button', { class: 'icon-btn', 'aria-label': 'Notifications', onClick: () => Render.notificationsSheet(),
+          html: ICONS.bell + (unreadCount ? `<span class="badge">${unreadCount}</span>` : '') }),
+        el('button', { class: 'icon-btn', 'aria-label': 'Toggle theme', onClick: () => Theme.toggle(),
+          html: State.theme === 'dark' ? ICONS.sun : ICONS.moon }),
+      ),
+    );
+  },
+  topbar() {
+    const old = $('.topbar');
+    if (old) old.replaceWith(this.topbarNode());
+  },
+
+  navNode() {
+    const items = [
+      { id: 'book', label: 'Book', icon: ICONS.paddle },
+      { id: 'calendar', label: 'Calendar', icon: ICONS.calendar },
+      { id: 'scores', label: 'Scores', icon: ICONS.trophy },
+      { id: 'chat', label: 'Assistant', icon: ICONS.chat },
+      { id: 'profile', label: 'Profile', icon: ICONS.user },
+    ];
+    return el('nav', { class: 'nav' },
+      ...items.map(it => el('button', {
+        class: 'nav-item' + (State.route === it.id ? ' active' : ''),
+        'aria-label': it.label,
+        'aria-current': State.route === it.id ? 'page' : null,
+        onClick: () => { State.route = it.id; Render.current(); haptic(6); },
+      }, el('span', { html: it.icon }), el('span', {}, it.label))),
+    );
+  },
+
+  current() {
+    const oldNav = $('.nav');
+    if (oldNav) oldNav.replaceWith(this.navNode());
+    this.topbar();
+    const view = $('#view-root');
+    if (!view) return;
+    view.innerHTML = '';
+    switch (State.route) {
+      case 'book': this.viewBook(view); break;
+      case 'calendar': this.viewCalendar(view); break;
+      case 'scores': this.viewScores(view); break;
+      case 'chat': this.viewChat(view); break;
+      case 'profile': this.viewProfile(view); break;
+      case 'admin': this.viewAdmin(view); break;
+      default: this.viewBook(view);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  },
+
+  /* ===== BOOK ===== */
+  viewBook(view) {
+    const myBookings = State.bookings.filter(b => b.owner === State.user.email);
+    const todayBookings = State.bookings.filter(b => b.date === ymd(new Date()));
+
+    view.appendChild(
+      el('section', { class: 'hero' },
+        el('div', { class: 'hero-content' },
+          el('div', { class: 'eyebrow' }, `${CONFIG.CLUB_CITY.toUpperCase()} · ${fmtDate(new Date(), { year: 'numeric' }).toUpperCase()}`),
+          el('h1', { html: `Welcome back, <em>${sanitize(State.user.name.split(' ')[0])}</em>.` }),
+          el('div', { class: 'hero-meta' }, `${State.courts.length} courts · ${todayBookings.length} sessions today`),
+          el('div', { class: 'hero-cta' },
+            el('button', { class: 'btn btn-primary', onClick: () => Render.bookingSheet(), html: ICONS.plus + '<span>Book a court</span>' }),
+            el('button', { class: 'btn btn-ghost', onClick: () => { State.route = 'calendar'; Render.current(); } }, 'View schedule'),
+          ),
+        )
+      )
+    );
+
+    const paid = State.payments.filter(p => p.owner === State.user.email && p.status === 'paid').length;
+    const pending = State.payments.filter(p => p.owner === State.user.email && p.status === 'pending').length;
+    view.appendChild(
+      el('div', { class: 'stats' },
+        el('div', { class: 'stat' },
+          el('div', { class: 'stat-value' }, String(myBookings.length)),
+          el('div', { class: 'stat-label' }, 'Your bookings'),
+        ),
+        el('div', { class: 'stat' },
+          el('div', { class: 'stat-value' }, String(paid)),
+          el('div', { class: 'stat-label' }, 'Paid sessions'),
+        ),
+        el('div', { class: 'stat' },
+          el('div', { class: 'stat-value' }, String(pending)),
+          el('div', { class: 'stat-label' }, 'Pending'),
+        ),
+      )
+    );
+
+    view.appendChild(el('div', { class: 'section-header' },
+      el('h2', {}, 'Our courts'),
+      el('span', { class: 'link' }, `${fmtMoney(CONFIG.PRICE_PER_HOUR)}/hr`),
+    ));
+
+    const courtsList = el('div', { class: 'stack' });
+    State.courts.forEach(c => {
+      const todayCount = State.bookings.filter(b => b.courtId === c.id && b.date === ymd(new Date())).length;
+      courtsList.appendChild(
+        el('div', { class: 'card court-card', onClick: () => Render.bookingSheet({ courtId: c.id }) },
+          el('div', { class: 'court-mini' }),
+          el('div', { class: 'court-info' },
+            el('h3', {}, c.name),
+            el('p', {}, c.surface),
+          ),
+          el('div', { class: 'court-meta' },
+            el('span', { class: `chip ${todayCount >= 6 ? 'warn' : 'success'}` },
+              el('span', { class: 'chip-dot' }),
+              `${todayCount}/${CONFIG.TIME_SLOTS.length}`
+            ),
+          ),
+        )
+      );
+    });
+    view.appendChild(courtsList);
+
+    view.appendChild(el('div', { class: 'section-header' },
+      el('h2', {}, 'Today at a glance'),
+      el('span', { class: 'link' }, fmtDate(new Date(), { year: undefined })),
+    ));
+    const todayCard = el('div', { class: 'card' });
+    if (todayBookings.length === 0) {
+      todayCard.appendChild(this.emptyState('No bookings yet today. Be the first on the court!'));
+    } else {
+      todayBookings.sort((a, b) => a.time.localeCompare(b.time)).forEach(b => {
+        todayCard.appendChild(this.bookingItem(b));
+      });
+    }
+    view.appendChild(todayCard);
+  },
+
+  bookingItem(b) {
+    const isMine = b.owner === State.user.email;
+    const pmt = State.payments.find(p => p.bookingId === b.id);
+    return el('div', { class: 'booking-item' },
+      el('div', { class: 'booking-time' }, b.time),
+      el('div', { class: 'booking-meta' },
+        el('h4', {}, b.courtName),
+        el('p', {}, `${sanitize(b.players || b.owner)} · ${b.duration || 1}hr`),
+      ),
+      el('div', { class: 'booking-actions' },
+        pmt ? el('span', { class: 'chip ' + (pmt.status === 'paid' ? 'success' : 'warn') }, pmt.status) : null,
+        isMine ? el('button', { class: 'icon-btn', 'aria-label': 'Cancel', onClick: () => Render.confirmCancel(b), html: ICONS.close }) : null,
+      ),
+    );
+  },
+
+  emptyState(msg) {
+    return el('div', { class: 'empty' },
+      el('div', { html: ICONS.paddle }),
+      el('p', {}, msg),
+    );
+  },
+
+  bookingSheet(prefill = {}) {
+    const today = ymd(new Date());
+    let date = prefill.date || today;
+    let courtId = prefill.courtId || State.courts[0]?.id;
+    let time = prefill.time || null;
+    let repeat = false;
+    let duration = 1;
+    let players = State.user.name;
+
+    const body = el('div', {});
+
+    const courtSelect = el('select', { class: 'select' },
+      ...State.courts.map(c => el('option', { value: c.id, selected: c.id === courtId ? '' : null }, c.name))
+    );
+    courtSelect.onchange = () => { courtId = courtSelect.value; renderSlots(); };
+
+    const dateInput = el('input', { class: 'input', type: 'date', value: date, min: today });
+    dateInput.onchange = () => { date = dateInput.value; renderSlots(); };
+
+    const playersInput = el('input', { class: 'input', value: players, placeholder: 'Player names (comma separated)' });
+    playersInput.oninput = () => { players = playersInput.value; };
+
+    const durationSelect = el('select', { class: 'select' },
+      el('option', { value: '1' }, '1 hour'),
+      el('option', { value: '2' }, '2 hours'),
+    );
+    durationSelect.onchange = () => { duration = +durationSelect.value; renderSlots(); };
+
+    const repeatSwitch = el('div', { class: 'switch', onClick: (e) => {
+      repeat = !repeat;
+      e.currentTarget.classList.toggle('on', repeat);
+    }});
+
+    const slotsWrap = el('div', { class: 'timeslots' });
+    const summaryRow = el('div', { class: 'card', style: { marginTop: '0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+      el('div', {},
+        el('div', { class: 'eyebrow' }, 'Total'),
+        el('div', { style: { fontSize: '1.4rem', fontWeight: '700', fontFamily: 'var(--font-display)' } }, fmtMoney(CONFIG.PRICE_PER_HOUR * duration)),
+      ),
+      el('div', { style: { textAlign: 'right' } },
+        el('div', { class: 'eyebrow' }, 'Includes'),
+        el('div', { style: { fontSize: '0.85rem' } }, 'Court · balls · towels'),
+      ),
+    );
+
+    function renderSlots() {
+      slotsWrap.innerHTML = '';
+      const taken = new Set(
+        State.bookings.filter(b => b.courtId === courtId && b.date === date).map(b => b.time)
+      );
+      CONFIG.TIME_SLOTS.forEach(t => {
+        const isBooked = taken.has(t);
+        const slot = el('button', {
+          class: 'timeslot ' + (isBooked ? 'booked' : (time === t ? 'selected' : 'available')),
+          disabled: isBooked ? '' : null,
+          onClick: () => { if (isBooked) return; time = t; renderSlots(); }
+        }, t);
+        slotsWrap.appendChild(slot);
+      });
+    }
+    renderSlots();
+
+    body.append(
+      el('div', { class: 'field' }, el('label', {}, 'Court'), courtSelect),
+      el('div', { class: 'grid-2' },
+        el('div', { class: 'field' }, el('label', {}, 'Date'), dateInput),
+        el('div', { class: 'field' }, el('label', {}, 'Duration'), durationSelect),
+      ),
+      el('div', { class: 'field' }, el('label', {}, 'Available time slots'), slotsWrap),
+      el('div', { class: 'field' }, el('label', {}, 'Players'), playersInput),
+      el('div', { class: 'row' },
+        el('div', { class: 'left' },
+          el('strong', {}, 'Repeat weekly'),
+          el('small', {}, 'Same court, same time, next 4 weeks'),
+        ),
+        repeatSwitch,
+      ),
+      summaryRow,
+    );
+
+    Modal.open({
+      title: 'Book a court',
+      body,
+      actions: [{
+        label: 'Confirm booking', class: 'btn-primary',
+        onClick: async (close) => {
+          if (!time) { Toast.show({ title: 'Pick a time first', type: 'warn' }); return; }
+          const court = State.courts.find(c => c.id === courtId);
+          const price = CONFIG.PRICE_PER_HOUR * duration;
+          const datesToBook = repeat
+            ? Array.from({ length: 4 }, (_, i) => { const d = new Date(date); d.setDate(d.getDate() + i * 7); return ymd(d); })
+            : [date];
+
+          for (const d of datesToBook) {
+            const booking = await API.call('createBooking', {
+              courtId, courtName: court.name, date: d, time, duration, players, price,
+            });
+            State.bookings.push(booking);
+            Notify.scheduleReminder(booking);
+          }
+
+          Toast.show({ title: `Booked ${court.name}`, msg: `${fmtDate(date)} at ${time}${repeat ? ' (×4 weeks)' : ''}`, type: 'success' });
+          Notify.push({ title: 'Booking confirmed', body: `${court.name} on ${fmtDate(date)} at ${time}. Payment ${fmtMoney(price)} pending.` });
+          close();
+          await loadAll();
+          Render.current();
+        }
+      }]
+    });
+  },
+
+  confirmCancel(b) {
+    Modal.open({
+      title: 'Cancel booking?',
+      body: el('p', { style: { color: 'var(--fg-soft)' } },
+        `${b.courtName} · ${fmtDate(b.date)} at ${b.time}. Refunds processed within 24 hours.`),
+      actions: [
+        { label: 'Cancel booking', class: 'btn-accent', onClick: async (close) => {
+          await API.call('cancelBooking', { id: b.id });
+          State.bookings = State.bookings.filter(x => x.id !== b.id);
+          Toast.show({ title: 'Booking cancelled', type: 'info' });
+          close(); Render.current();
+        }},
+        { label: 'Keep it', class: 'btn-ghost', onClick: (close) => close() },
+      ],
+    });
+  },
+
+  /* ===== CALENDAR ===== */
+  viewCalendar(view) {
+    const cursor = State.calCursor;
+    const year = cursor.getFullYear();
+    const month = cursor.getMonth();
+    const first = new Date(year, month, 1);
+    const startOffset = first.getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const header = el('div', { class: 'cal-header' },
+      el('div', { class: 'cal-title' }, cursor.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })),
+      el('div', { class: 'cal-nav' },
+        el('button', { class: 'icon-btn', 'aria-label': 'Prev', html: ICONS.back, onClick: () => {
+          State.calCursor = new Date(year, month - 1, 1); Render.current();
+        }}),
+        el('button', { class: 'icon-btn', 'aria-label': 'Today', html: ICONS.refresh, onClick: () => {
+          State.calCursor = new Date(); State.selectedDate = new Date(); Render.current();
+        }}),
+        el('button', { class: 'icon-btn', 'aria-label': 'Next', html: ICONS.forward, onClick: () => {
+          State.calCursor = new Date(year, month + 1, 1); Render.current();
+        }}),
+      ),
+    );
+
+    const grid = el('div', { class: 'cal-grid' });
+    ['SUN','MON','TUE','WED','THU','FRI','SAT'].forEach(d => grid.appendChild(el('div', { class: 'cal-dow' }, d)));
+
+    const prevDays = new Date(year, month, 0).getDate();
+    for (let i = startOffset - 1; i >= 0; i--) {
+      const d = new Date(year, month - 1, prevDays - i);
+      grid.appendChild(this.calDayNode(d, true));
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+      grid.appendChild(this.calDayNode(new Date(year, month, d), false));
+    }
+    const trailing = 42 - (startOffset + daysInMonth);
+    for (let i = 1; i <= trailing; i++) {
+      grid.appendChild(this.calDayNode(new Date(year, month + 1, i), true));
+    }
+
+    view.appendChild(el('div', { class: 'card' }, header, grid));
+
+    const selDate = ymd(State.selectedDate);
+    const dayBookings = State.bookings.filter(b => b.date === selDate).sort((a,b) => a.time.localeCompare(b.time));
+
+    view.appendChild(el('div', { class: 'section-header' },
+      el('h2', {}, fmtDate(State.selectedDate, { year: undefined })),
+      el('div', { style: { display: 'flex', gap: '0.5rem' } },
+        el('button', { class: 'icon-btn', 'aria-label': 'Export iCal', html: ICONS.download, onClick: () => exportICal(dayBookings, fmtDate(State.selectedDate)) }),
+        el('button', { class: 'btn btn-sm btn-primary', onClick: () => Render.bookingSheet({ date: selDate }) }, '+ Book'),
+      ),
+    ));
+
+    const dayCard = el('div', { class: 'card' });
+    if (dayBookings.length === 0) {
+      dayCard.appendChild(this.emptyState('Open court. Be the first to book.'));
+    } else {
+      dayBookings.forEach(b => dayCard.appendChild(this.bookingItem(b)));
+    }
+    view.appendChild(dayCard);
+
+    view.appendChild(el('div', { style: { marginTop: '1rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' } },
+      el('button', { class: 'btn btn-secondary btn-sm', html: ICONS.download + '<span>Export month (.ics)</span>',
+        onClick: () => exportICal(State.bookings.filter(b => b.date.startsWith(`${year}-${String(month+1).padStart(2,'0')}`)), `${year}-${month+1}`) }),
+    ));
+  },
+
+  calDayNode(d, otherMonth) {
+    const key = ymd(d);
+    const isToday = key === ymd(new Date());
+    const isSel = key === ymd(State.selectedDate);
+    const has = State.bookings.some(b => b.date === key);
+    return el('button', {
+      class: 'cal-day' + (otherMonth ? ' other-month' : '') + (isToday ? ' today' : '') + (isSel ? ' selected' : ''),
+      onClick: () => { State.selectedDate = d; State.calCursor = d; Render.current(); haptic(4); },
+    },
+      el('span', { class: 'cal-day-num' }, String(d.getDate())),
+      has ? el('span', { class: 'cal-day-dot' }) : null,
+    );
+  },
+
+  /* ===== SCORES ===== */
+  viewScores(view) {
+    const m = State.currentMatch;
+
+    if (!m) {
+      view.appendChild(el('div', { class: 'section-header' },
+        el('h2', {}, 'Live scoring'),
+        el('span', { class: 'chip ' + (State.bleConnected ? 'success' : '') },
+          el('span', { class: 'chip-dot' }), State.bleConnected ? 'BLE paired' : 'BLE off',
+        ),
+      ));
+      view.appendChild(el('div', { class: 'card feature' },
+        el('div', { style: { position: 'relative', zIndex: 1 } },
+          el('div', { class: 'eyebrow', style: { color: 'var(--brass-soft)' } }, 'NEW MATCH'),
+          el('h2', { style: { color: 'var(--cream)', margin: '0.5rem 0 0.4rem' } }, 'Start a match'),
+          el('p', { style: { opacity: 0.85, fontSize: '0.92rem', marginBottom: '1.2rem' } }, 'Singles or doubles, traditional or rally scoring. Auto-synced to the live display.'),
+          el('button', { class: 'btn btn-primary', style: { background: 'var(--brass)', color: 'var(--court-green-deep)' },
+            html: ICONS.plus + '<span>New match</span>', onClick: () => Render.newMatchSheet() }),
+        )
+      ));
+
+      view.appendChild(el('div', { class: 'section-header' }, el('h2', {}, 'Recent matches')));
+      const list = el('div', { class: 'stack' });
+      const sorted = [...State.scores].sort((a,b) => (b.startedAt||0) - (a.startedAt||0)).slice(0, 6);
+      if (!sorted.length) list.appendChild(el('div', { class: 'card' }, this.emptyState('No matches yet. Start your first one above.')));
+      sorted.forEach(s => {
+        const isSeries = s.matchType && s.matchType !== 'single';
+        const sA = s.teamA.setsWon || 0;
+        const sB = s.teamB.setsWon || 0;
+        const mainScore = isSeries ? `${sA}–${sB}` : `${s.teamA.score}–${s.teamB.score}`;
+        const setSummary = isSeries && Array.isArray(s.sets) && s.sets.length
+          ? s.sets.map(x => `${x.a}–${x.b}`).join(' · ')
+          : '';
+        const typeLabel = s.matchType === 'bo5' ? 'BO5' : (s.matchType === 'bo3' ? 'BO3' : '');
+        list.appendChild(el('div', { class: 'card', style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between' } },
+          el('div', { style: { flex: 1, minWidth: 0 } },
+            el('strong', {}, `${s.teamA.name} vs ${s.teamB.name}`),
+            el('div', { style: { fontSize: '0.8rem', color: 'var(--fg-mute)' } },
+              `${s.courtName || 'No court'} · ${new Date(s.startedAt).toLocaleDateString()}${typeLabel ? ' · ' + typeLabel : ''}`),
+            setSummary ? el('div', { style: { fontSize: '0.75rem', color: 'var(--fg-mute)', fontFamily: 'var(--font-mono)', marginTop: '2px' } }, setSummary) : null,
+          ),
+          el('div', { style: { fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 600, color: 'var(--accent)', textAlign: 'right' } },
+            mainScore,
+            isSeries ? el('div', { style: { fontSize: '0.7rem', color: 'var(--fg-mute)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: '2px' } }, 'sets') : null,
+          ),
+        ));
+      });
+      view.appendChild(list);
+      return;
+    }
+
+    const slotCount = m.format === 'doubles' ? 2 : 1;
+    const initialsFor = (t, idx) => {
+      const players = (t.players || '').split(/[,/&]| and /).map(s => s.trim()).filter(Boolean);
+      return (players[idx] || t.name || '?').charAt(0).toUpperCase();
+    };
+    const teamCard = (t, side) => {
+      const photos = Array.isArray(t.photos) ? t.photos : [];
+      const avatars = [];
+      for (let i = 0; i < slotCount; i++) {
+        const photo = photos[i];
+        avatars.push(el('button', {
+          class: 'team-avatar' + (photo ? '' : ' empty'),
+          'aria-label': photo ? `Change ${t.name} player ${i+1} photo` : `Add ${t.name} player ${i+1} photo`,
+          onClick: () => Render.photoPickerSheet({
+            title: slotCount > 1 ? `${t.name} · Player ${i+1}` : t.name,
+            current: photo,
+            onCapture: (dataUrl) => Scoring.setTeamPhoto(side, i, dataUrl),
+          }),
+        },
+          photo
+            ? el('img', { src: photo, alt: '' })
+            : el('span', { html: ICONS.camera }),
+        ));
+      }
+      // Set pips below the score
+      const totalSets = Scoring.totalSets(m.matchType);
+      const teamSetsWon = t.setsWon || 0;
+      const pips = [];
+      if (m.matchType !== 'single') {
+        for (let i = 0; i < totalSets; i++) {
+          pips.push(el('div', { class: 'set-pip' + (i < teamSetsWon ? ' won' : '') }));
+        }
+      }
+      return el('div', { class: 'score-team' + (m.serving === side ? ' serving' : '') },
+        el('div', { class: 'team-avatars' }, ...avatars),
+        el('div', { class: 'team-info' },
+          el('div', { class: 'team-name' }, t.name),
+          el('div', { class: 'team-players' }, t.players),
+        ),
+        el('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'flex-end' } },
+          el('div', { class: 'team-score' }, String(t.score)),
+          pips.length ? el('div', { class: 'set-pips' }, ...pips) : null,
+        ),
+      );
+    };
+
+    const matchTypeLabel = m.matchType === 'bo5' ? 'Best of 5'
+      : m.matchType === 'bo3' ? 'Best of 3'
+      : 'Single match';
+    const seriesPart = m.matchType !== 'single'
+      ? ` · Set ${m.currentSet} · Series ${m.teamA.setsWon}–${m.teamB.setsWon}`
+      : '';
+
+    const scoreboardChildren = [
+      el('div', { class: 'score-teams' }, teamCard(m.teamA, 'A'), teamCard(m.teamB, 'B')),
+      el('div', { class: 'score-meta' },
+        el('span', {}, `${m.format} · to ${m.target}`),
+        el('span', {}, `Serving: ${m.serving === 'A' ? m.teamA.name : m.teamB.name}${m.format === 'doubles' ? ' · #' + m[`team${m.serving}`].serverNum : ''}`),
+        el('span', {}, m.scoring),
+      ),
+    ];
+
+    // Set-by-set history (only when matchType is bo3/bo5)
+    if (m.matchType !== 'single') {
+      const setRows = [
+        el('div', { class: 'set-row', style: { borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '4px', marginBottom: '2px' } },
+          el('div', { class: 'set-label' }, matchTypeLabel),
+          el('div', { class: 'set-cell', style: { textAlign: 'right', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', opacity: 0.7 } }, m.teamA.name.slice(0, 10)),
+          el('div', { class: 'set-cell', style: { textAlign: 'right', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', opacity: 0.7 } }, m.teamB.name.slice(0, 10)),
+        ),
+      ];
+      m.sets.forEach((s, i) => {
+        setRows.push(el('div', { class: 'set-row' },
+          el('div', { class: 'set-label' }, `Set ${i + 1}`),
+          el('div', { class: 'set-cell' + (s.winner === 'A' ? ' won' : ' lost'), style: { textAlign: 'right' } }, String(s.a)),
+          el('div', { class: 'set-cell' + (s.winner === 'B' ? ' won' : ' lost'), style: { textAlign: 'right' } }, String(s.b)),
+        ));
+      });
+      if (!m.winner) {
+        setRows.push(el('div', { class: 'set-row current' },
+          el('div', { class: 'set-label' }, `Set ${m.currentSet} · live`),
+          el('div', { class: 'set-cell', style: { textAlign: 'right' } }, String(m.teamA.score)),
+          el('div', { class: 'set-cell', style: { textAlign: 'right' } }, String(m.teamB.score)),
+        ));
+      }
+      scoreboardChildren.push(el('div', { class: 'set-history' }, ...setRows));
+    }
+
+    view.appendChild(el('div', { class: 'scoreboard' }, ...scoreboardChildren));
+
+    if (m.winner) {
+      const finalLabel = m.matchType === 'single'
+        ? `Final ${m.sets[0] ? m.sets[0].a : m.teamA.score}–${m.sets[0] ? m.sets[0].b : m.teamB.score}`
+        : `Sets ${m.teamA.setsWon}–${m.teamB.setsWon} · ${m.sets.map(s => `${s.a}–${s.b}`).join(', ')}`;
+      view.appendChild(el('div', { class: 'card', style: { textAlign: 'center', background: 'color-mix(in srgb, var(--brass) 14%, var(--bg-elev))' } },
+        el('div', { style: { fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 600 } }, `🏆 ${m[`team${m.winner}`].name} won`),
+        el('p', { style: { color: 'var(--fg-soft)', marginTop: '0.3rem' } }, finalLabel),
+        el('div', { style: { display: 'flex', gap: '0.5rem', justifyContent: 'center', marginTop: '1rem' } },
+          el('button', { class: 'btn btn-primary', onClick: () => { State.currentMatch = null; Scoring.save(); Render.current(); } }, 'Start new match'),
+        )
+      ));
+    } else {
+      view.appendChild(el('div', { class: 'score-controls' },
+        el('button', { class: 'score-btn', onClick: () => Scoring.point('A') },
+          el('span', {}, '+1'),
+          el('span', { class: 'sub' }, m.teamA.name),
+        ),
+        el('button', { class: 'score-btn', onClick: () => Scoring.point('B') },
+          el('span', {}, '+1'),
+          el('span', { class: 'sub' }, m.teamB.name),
+        ),
+      ));
+    }
+
+    view.appendChild(el('div', { class: 'score-aux' },
+      el('button', { class: 'btn btn-secondary btn-sm', html: ICONS.refresh + '<span>Undo</span>', onClick: () => Scoring.undo() }),
+      el('button', { class: 'btn btn-secondary btn-sm',
+        html: ICONS.bluetooth + `<span>${State.bleConnected ? 'Unpair' : 'Pair BLE'}</span>`,
+        onClick: () => State.bleConnected ? BLE.disconnect() : BLE.connect()
+      }),
+      el('button', { class: 'btn btn-secondary btn-sm', html: ICONS.cast + '<span>Cast display</span>',
+        onClick: () => {
+          const url = `${location.origin}${location.pathname}?display=true&match=${m.id}`;
+          window.open(url, '_blank', 'noopener,noreferrer');
+          Toast.show({ title: 'Display opened', msg: 'Cast or mirror this tab to any screen.', type: 'success' });
+        }
+      }),
+      el('button', { class: 'btn btn-secondary btn-sm', html: ICONS.close + '<span>End match</span>', onClick: () => Scoring.reset() }),
+    ));
+
+    view.appendChild(el('div', { class: 'card', style: { marginTop: '1rem' } },
+      el('div', { class: 'eyebrow' }, 'OFFICIAL RULES · QUICK REFERENCE'),
+      el('div', { style: { marginTop: '0.6rem', fontSize: '0.88rem', lineHeight: 1.6, color: 'var(--fg-soft)' } },
+        el('p', { style: { margin: '0 0 0.4rem' }, html: '<strong>Serving:</strong> underhand, contact below the waist, diagonal court. First server of a side-out begins on the right.' }),
+        el('p', { style: { margin: '0 0 0.4rem' }, html: '<strong>Two-bounce rule:</strong> Receiving team must let the serve bounce; serving team must let the return bounce. After that, volleying is allowed (outside the kitchen).' }),
+        el('p', { style: { margin: '0 0 0.4rem' }, html: '<strong>Kitchen:</strong> No volleys from the 7-foot non-volley zone. Your momentum cannot carry you in either.' }),
+        el('p', { style: { margin: 0 }, html: '<strong>Scoring:</strong> Traditional — only servers score. Rally — every rally scores. Both win-by-two.' }),
+      ),
+    ));
+  },
+
+  /**
+   * Photo picker — small choice sheet:
+   *   - Take photo (opens live camera capture UI)
+   *   - Choose from gallery (native file picker, accept=image)
+   *   - Remove photo (only if one is already set)
+   * Calls onCapture(dataUrl) when a new photo is ready,
+   * or onCapture('') when the user removes the photo.
+   */
+  photoPickerSheet({ title = 'Add photo', current = '', onCapture }) {
+    const fileInput = el('input', {
+      type: 'file',
+      accept: 'image/*',
+      style: { display: 'none' },
+    });
+    fileInput.addEventListener('change', async (e) => {
+      const f = e.target.files && e.target.files[0];
+      e.target.value = '';
+      if (!f) return;
+      if (!f.type.startsWith('image/')) {
+        Toast.show({ title: 'Not an image', type: 'warn' });
+        return;
+      }
+      try {
+        const dataUrl = await Camera.snapshotFromFile(f);
+        onCapture?.(dataUrl);
+        close?.();
+        Toast.show({ title: 'Photo updated', type: 'success' });
+      } catch (err) {
+        Toast.show({ title: 'Could not load image', msg: err.message, type: 'danger' });
+      }
+    });
+
+    const previewNode = current
+      ? el('div', { style: { textAlign: 'center', marginBottom: '1rem' } },
+          el('img', { src: current, alt: '',
+            style: { width: '120px', height: '120px', borderRadius: '50%', objectFit: 'cover',
+              border: '3px solid var(--brass)', boxShadow: 'var(--shadow-md)' } }),
+          el('div', { style: { fontSize: '0.78rem', color: 'var(--fg-mute)', marginTop: '0.5rem' } }, 'Current photo'),
+        )
+      : null;
+
+    const body = el('div', {},
+      previewNode,
+      el('p', { style: { color: 'var(--fg-soft)', fontSize: '0.88rem', marginTop: previewNode ? 0 : null, textAlign: 'center' } },
+        current ? 'Replace the photo or remove it below.' : 'Pick a photo source. Photos appear on the scoreboard and cast display.'),
+      fileInput,
+    );
+
+    let close;
+    const actions = [
+      { label: '📷  Take photo', class: 'btn-primary', onClick: async (closeFn) => {
+        closeFn();
+        const dataUrl = await Camera.open({
+          title,
+          subtitle: 'Frame your face inside the circle, then tap the shutter.',
+        });
+        if (dataUrl) {
+          onCapture?.(dataUrl);
+          Toast.show({ title: 'Photo saved', type: 'success' });
+        }
+      }},
+      { label: '🖼  Choose from gallery', class: 'btn-secondary', onClick: (closeFn) => {
+        close = closeFn;
+        fileInput.click();
+      }},
+    ];
+    if (current) {
+      actions.push({ label: 'Remove photo', class: 'btn-ghost', onClick: (closeFn) => {
+        onCapture?.('');
+        closeFn();
+        Toast.show({ title: 'Photo removed', type: 'info' });
+      }});
+    }
+    actions.push({ label: 'Cancel', class: 'btn-ghost', onClick: (closeFn) => closeFn() });
+
+    Modal.open({ title, body, actions });
+  },
+
+  newMatchSheet() {
+    let format = 'doubles';
+    let scoring = 'traditional';
+    let target = 11;
+    let matchType = 'single';
+    let teamAName = 'Team Alpha', teamBName = 'Team Bravo';
+    let teamAPlayers = State.user.name, teamBPlayers = '';
+    let teamAPhotos = ['', ''], teamBPhotos = ['', ''];
+    let courtId = State.courts[0]?.id || '';
+
+    const body = el('div', {});
+    const fmtSelect = el('select', { class: 'select' },
+      el('option', { value: 'doubles' }, 'Doubles'),
+      el('option', { value: 'singles' }, 'Singles'),
+    );
+    fmtSelect.onchange = () => { format = fmtSelect.value; renderThumbRows(); };
+
+    const matchTypeSelect = el('select', { class: 'select' },
+      el('option', { value: 'single' }, 'Single match · 1 set'),
+      el('option', { value: 'bo3' }, 'Best of 3 · first to 2 sets'),
+      el('option', { value: 'bo5' }, 'Best of 5 · first to 3 sets'),
+    );
+    matchTypeSelect.onchange = () => matchType = matchTypeSelect.value;
+
+    const scoringSelect = el('select', { class: 'select' },
+      el('option', { value: 'traditional' }, 'Traditional (only server scores)'),
+      el('option', { value: 'rally' }, 'Rally (every rally scores)'),
+    );
+    scoringSelect.onchange = () => scoring = scoringSelect.value;
+
+    const targetSelect = el('select', { class: 'select' },
+      el('option', { value: '11' }, 'Play to 11'),
+      el('option', { value: '15' }, 'Play to 15'),
+      el('option', { value: '21' }, 'Play to 21'),
+    );
+    targetSelect.onchange = () => target = +targetSelect.value;
+
+    const courtSelect = el('select', { class: 'select' },
+      el('option', { value: '' }, 'Practice / no court'),
+      ...State.courts.map(c => el('option', { value: c.id }, c.name))
+    );
+    courtSelect.onchange = () => courtId = courtSelect.value;
+
+    const aName = el('input', { class: 'input', value: teamAName });
+    aName.oninput = () => teamAName = aName.value;
+    const aPlayers = el('input', { class: 'input', value: teamAPlayers, placeholder: 'Player names' });
+    aPlayers.oninput = () => teamAPlayers = aPlayers.value;
+    const bName = el('input', { class: 'input', value: teamBName });
+    bName.oninput = () => teamBName = bName.value;
+    const bPlayers = el('input', { class: 'input', value: teamBPlayers, placeholder: 'Player names' });
+    bPlayers.oninput = () => teamBPlayers = bPlayers.value;
+
+    // Photo thumb containers — re-rendered when format changes
+    const aThumbsContainer = el('div', { class: 'team-photo-thumbs' });
+    const bThumbsContainer = el('div', { class: 'team-photo-thumbs' });
+
+    const renderThumb = (photo) => photo
+      ? el('img', { src: photo, alt: 'Player photo' })
+      : el('span', { html: ICONS.camera });
+
+    function makeThumb(photos, idx, teamLabel) {
+      const photo = photos[idx] || '';
+      const thumb = el('button', {
+        class: 'team-photo-thumb' + (photo ? ' has-photo' : ''),
+        'aria-label': `${teamLabel} player ${idx+1} photo`,
+      }, renderThumb(photo));
+      thumb.onclick = () => Render.photoPickerSheet({
+        title: `${teamLabel} · Player ${idx+1}`,
+        current: photos[idx] || '',
+        onCapture: (dataUrl) => {
+          photos[idx] = dataUrl || '';
+          thumb.innerHTML = '';
+          thumb.appendChild(renderThumb(photos[idx]));
+          thumb.classList.toggle('has-photo', !!photos[idx]);
+        },
+      });
+      return thumb;
+    }
+
+    function renderThumbRows() {
+      const slots = format === 'doubles' ? 2 : 1;
+      aThumbsContainer.innerHTML = '';
+      bThumbsContainer.innerHTML = '';
+      for (let i = 0; i < slots; i++) {
+        aThumbsContainer.appendChild(makeThumb(teamAPhotos, i, 'Team A'));
+        bThumbsContainer.appendChild(makeThumb(teamBPhotos, i, 'Team B'));
+      }
+    }
+    renderThumbRows();
+
+    body.append(
+      el('div', { class: 'grid-2' },
+        el('div', { class: 'field' }, el('label', {}, 'Format'), fmtSelect),
+        el('div', { class: 'field' }, el('label', {}, 'Target'), targetSelect),
+      ),
+      el('div', { class: 'field' }, el('label', {}, 'Match type'), matchTypeSelect),
+      el('div', { class: 'field' }, el('label', {}, 'Scoring system'), scoringSelect),
+      el('div', { class: 'field' }, el('label', {}, 'Court (optional)'), courtSelect),
+      el('div', { class: 'card', style: { padding: '1rem', marginBottom: '0.75rem' } },
+        el('div', { class: 'eyebrow', style: { marginBottom: '0.4rem' } }, 'TEAM A'),
+        el('div', { class: 'team-photo-row' },
+          aThumbsContainer,
+          el('div', { style: { flex: 1, minWidth: 0 } },
+            el('div', { style: { fontSize: '0.75rem', color: 'var(--fg-mute)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' } }, 'Player photos'),
+            el('div', { style: { fontSize: '0.8rem', color: 'var(--fg-soft)' } }, 'Tap to take or load from gallery'),
+          ),
+        ),
+        el('div', { class: 'field' }, el('label', {}, 'Name'), aName),
+        el('div', { class: 'field', style: { marginBottom: 0 } }, el('label', {}, 'Players'), aPlayers),
+      ),
+      el('div', { class: 'card', style: { padding: '1rem' } },
+        el('div', { class: 'eyebrow', style: { marginBottom: '0.4rem' } }, 'TEAM B'),
+        el('div', { class: 'team-photo-row' },
+          bThumbsContainer,
+          el('div', { style: { flex: 1, minWidth: 0 } },
+            el('div', { style: { fontSize: '0.75rem', color: 'var(--fg-mute)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' } }, 'Player photos'),
+            el('div', { style: { fontSize: '0.8rem', color: 'var(--fg-soft)' } }, 'Tap to take or load from gallery'),
+          ),
+        ),
+        el('div', { class: 'field' }, el('label', {}, 'Name'), bName),
+        el('div', { class: 'field', style: { marginBottom: 0 } }, el('label', {}, 'Players'), bPlayers),
+      ),
+    );
+
+    Modal.open({
+      title: 'New match',
+      body,
+      actions: [{
+        label: 'Start match', class: 'btn-primary',
+        onClick: (close) => {
+          const court = State.courts.find(c => c.id === courtId);
+          const slots = format === 'doubles' ? 2 : 1;
+          Scoring.newMatch({
+            teamA: { name: teamAName, players: teamAPlayers, photos: teamAPhotos.slice(0, slots).filter(Boolean) },
+            teamB: { name: teamBName, players: teamBPlayers, photos: teamBPhotos.slice(0, slots).filter(Boolean) },
+            format, scoring, target, matchType, courtName: court?.name || '',
+          });
+          close();
+          Render.current();
+          Toast.show({ title: 'Match started', msg: `${teamAName} vs ${teamBName}`, type: 'success' });
+        }
+      }]
+    });
+  },
+
+  /* ===== CHAT ===== */
+  viewChat(view) {
+    const wrap = el('div', { class: 'chat-wrap' });
+    const messages = el('div', { class: 'chat-messages', id: 'chat-messages' });
+
+    if (!State.chatHistory.length) {
+      State.chatHistory.push({
+        role: 'ai',
+        content: `Hi ${State.user.name.split(' ')[0]} 👋 I'm your club assistant. Ask me about **rules**, **bookings**, **scoring**, or just **coaching tips**. What would you like to know?`,
+      });
+    }
+    State.chatHistory.forEach(m => messages.appendChild(this.chatMsgNode(m)));
+
+    const suggestions = el('div', { class: 'chat-suggestions' },
+      ...['What are the kitchen rules?', 'Book a court for tomorrow', 'Give me a coaching tip', 'How does rally scoring work?'].map(s =>
+        el('button', { class: 'chat-suggestion', onClick: () => sendMsg(s) }, s)
+      )
+    );
+
+    const input = el('textarea', { class: 'chat-input', placeholder: 'Ask anything…', rows: '1' });
+    input.addEventListener('input', () => {
+      input.style.height = 'auto';
+      input.style.height = Math.min(120, input.scrollHeight) + 'px';
+    });
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMsg(input.value);
+      }
+    });
+
+    const sendBtn = el('button', { class: 'chat-send', 'aria-label': 'Send', html: ICONS.send });
+
+    async function sendMsg(text) {
+      const value = (text || input.value).trim();
+      if (!value) return;
+      input.value = ''; input.style.height = 'auto';
+      const userMsg = { role: 'user', content: value };
+      State.chatHistory.push(userMsg);
+      messages.appendChild(Render.chatMsgNode(userMsg));
+      messages.scrollTop = messages.scrollHeight;
+
+      const typing = el('div', { class: 'msg ai' }, el('span', { class: 'typing' }, el('span'), el('span'), el('span')));
+      messages.appendChild(typing);
+      messages.scrollTop = messages.scrollHeight;
+
+      try {
+        const ctx = {
+          user: State.user,
+          bookings: State.bookings,
+          score: State.currentMatch,
+          today: ymd(new Date()),
+        };
+        const res = await API.call('chat', { message: value, context: ctx });
+        typing.remove();
+        const reply = (res?.reply || 'Sorry, I had trouble responding. Try again?').trim();
+        const aiMsg = { role: 'ai', content: reply };
+        State.chatHistory.push(aiMsg);
+        messages.appendChild(Render.chatMsgNode(aiMsg));
+        messages.scrollTop = messages.scrollHeight;
+      } catch (e) {
+        typing.remove();
+        const aiMsg = { role: 'ai', content: "I'm having trouble reaching the server. Try again shortly." };
+        State.chatHistory.push(aiMsg);
+        messages.appendChild(Render.chatMsgNode(aiMsg));
+      }
+    }
+    sendBtn.onclick = () => sendMsg();
+
+    const inputWrap = el('div', { class: 'chat-input-wrap' }, input, sendBtn);
+
+    wrap.append(messages, suggestions, inputWrap);
+    view.appendChild(wrap);
+
+    requestAnimationFrame(() => { messages.scrollTop = messages.scrollHeight; input.focus(); });
+  },
+
+  chatMsgNode(m) {
+    const html = sanitize(m.content).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+    return el('div', { class: `msg ${m.role}`, html });
+  },
+
+  /* ===== PROFILE ===== */
+  viewProfile(view) {
+    const u = State.user;
+    const myBookings = State.bookings.filter(b => b.owner === u.email);
+    const myPayments = State.payments.filter(p => p.owner === u.email);
+    const totalSpent = myPayments.filter(p => p.status === 'paid').reduce((s, p) => s + (p.amount || 0), 0);
+
+    view.appendChild(el('div', { class: 'card feature' },
+      el('div', { style: { position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', gap: '1rem' } },
+        el('div', { style: { width: '64px', height: '64px', borderRadius: '50%', background: 'var(--brass)',
+          color: 'var(--court-green-deep)', display: 'grid', placeItems: 'center', fontFamily: 'var(--font-display)',
+          fontSize: '1.6rem', fontWeight: 600 } }, u.name.charAt(0).toUpperCase()),
+        el('div', { style: { flex: 1, minWidth: 0 } },
+          el('div', { style: { fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 500 } }, u.name),
+          el('div', { style: { fontSize: '0.85rem', opacity: 0.8 } }, u.email),
+          el('div', { style: { marginTop: '0.4rem' } },
+            el('span', { class: 'chip', style: { background: 'rgba(232,182,71,0.2)', color: 'var(--brass)', borderColor: 'transparent' } },
+              u.role.toUpperCase())
+          ),
+        ),
+      )
+    ));
+
+    view.appendChild(el('div', { class: 'stats' },
+      el('div', { class: 'stat' },
+        el('div', { class: 'stat-value' }, String(myBookings.length)),
+        el('div', { class: 'stat-label' }, 'Total bookings')),
+      el('div', { class: 'stat' },
+        el('div', { class: 'stat-value' }, fmtMoney(totalSpent).replace(/\.\d+/, '')),
+        el('div', { class: 'stat-label' }, 'Total spent')),
+      el('div', { class: 'stat' },
+        el('div', { class: 'stat-value' }, String(State.scores.filter(s => (s.teamA.players||'').includes(u.name) || (s.teamB.players||'').includes(u.name)).length)),
+        el('div', { class: 'stat-label' }, 'Matches played')),
+    ));
+
+    view.appendChild(el('div', { class: 'section-header' }, el('h2', {}, 'Payments')));
+    const pmtCard = el('div', { class: 'card' });
+    if (!myPayments.length) {
+      pmtCard.appendChild(this.emptyState('No payments yet.'));
+    } else {
+      myPayments.slice().reverse().forEach(p => {
+        const b = State.bookings.find(x => x.id === p.bookingId);
+        pmtCard.appendChild(el('div', { class: 'row' },
+          el('div', { class: 'left' },
+            el('strong', {}, b ? `${b.courtName} · ${b.time}` : 'Booking'),
+            el('small', {}, `${b ? fmtDate(b.date) : '—'} · ${fmtMoney(p.amount)}`),
+          ),
+          p.status === 'pending'
+            ? el('button', { class: 'btn btn-sm btn-primary', onClick: () => Render.paymentSheet(p) }, 'Pay now')
+            : el('span', { class: 'chip success' }, 'Paid'),
+        ));
+      });
+    }
+    view.appendChild(pmtCard);
+
+    view.appendChild(el('div', { class: 'section-header' }, el('h2', {}, 'Settings')));
+    const settings = el('div', { class: 'stack' },
+      this.settingRow({
+        title: 'Push notifications',
+        desc: 'Booking reminders and match alerts',
+        right: (() => {
+          const sw = el('div', { class: 'switch', onClick: async (e) => {
+            const granted = await Notify.requestPermission();
+            e.currentTarget.classList.toggle('on', granted);
+            if (granted) Toast.show({ title: 'Notifications on', type: 'success' });
+          }});
+          if (typeof Notification !== 'undefined' && Notification.permission === 'granted') sw.classList.add('on');
+          return sw;
+        })(),
+      }),
+      this.settingRow({
+        title: 'Dark mode',
+        desc: 'Reduces eye strain in low light',
+        right: (() => {
+          const sw = el('div', { class: 'switch' + (State.theme === 'dark' ? ' on' : ''), onClick: () => Theme.toggle() });
+          return sw;
+        })(),
+      }),
+      this.settingRow({
+        title: 'Bluetooth scoring',
+        desc: 'Connect a button remote for hands-free scoring',
+        right: el('button', { class: 'btn btn-sm btn-secondary', onClick: () => State.bleConnected ? BLE.disconnect() : BLE.connect() },
+          State.bleConnected ? 'Disconnect' : 'Pair'),
+      }),
+      this.settingRow({
+        title: 'Backend URL',
+        desc: CONFIG.API_URL ? `Connected: ${CONFIG.API_URL.slice(0,40)}…` : 'Using local mock data (no backend set)',
+        right: el('button', { class: 'btn btn-sm btn-secondary', onClick: () => Render.apiUrlSheet() }, 'Configure'),
+      }),
+      u.role === 'admin' ? this.settingRow({
+        title: 'Admin dashboard',
+        desc: 'Manage courts, users, and logs',
+        right: el('button', { class: 'btn btn-sm btn-primary', onClick: () => { State.route = 'admin'; Render.current(); } }, 'Open'),
+      }) : null,
+      this.settingRow({
+        title: 'Sign out',
+        desc: 'Clear session and return to login',
+        right: el('button', { class: 'btn btn-sm btn-ghost', onClick: () => Auth.signOut() }, 'Sign out'),
+      }),
+    );
+    view.appendChild(settings);
+
+    view.appendChild(el('div', { class: 'powered-by powered-by-profile' },
+      el('span', {}, 'Powered by'),
+      el('span', { class: 'powered-mark' }, 'CYRABELL'),
+    ));
+  },
+
+  settingRow({ title, desc, right }) {
+    if (!title) return null;
+    return el('div', { class: 'row' },
+      el('div', { class: 'left' }, el('strong', {}, title), el('small', {}, desc)),
+      right,
+    );
+  },
+
+  apiUrlSheet() {
+    let url = CONFIG.API_URL;
+    const input = el('input', { class: 'input', value: url, placeholder: 'https://script.google.com/macros/s/.../exec' });
+    input.oninput = () => url = input.value.trim();
+    Modal.open({
+      title: 'Backend URL',
+      body: el('div', {},
+        el('p', { style: { color: 'var(--fg-soft)', fontSize: '0.88rem', marginTop: 0 } },
+          'Paste your deployed Google Apps Script web app URL. Leave blank to use local mock data.'),
+        el('div', { class: 'field' }, el('label', {}, 'API URL'), input),
+      ),
+      actions: [
+        { label: 'Save', class: 'btn-primary', onClick: (close) => {
+          if (url) localStorage.setItem('dink.apiUrl', url);
+          else localStorage.removeItem('dink.apiUrl');
+          CONFIG.API_URL = url;
+          close();
+          Toast.show({ title: 'Backend updated', msg: 'Reloading…', type: 'success' });
+          setTimeout(() => location.reload(), 700);
+        }},
+        { label: 'Cancel', class: 'btn-ghost', onClick: (close) => close() },
+      ],
+    });
+  },
+
+  paymentSheet(payment) {
+    let method = 'card';
+    const methodGroup = el('div', { class: 'grid-2', style: { marginBottom: '1rem' } });
+    const update = () => {
+      methodGroup.childNodes.forEach((n, i) => {
+        n.style.border = ['card','paypal'][i] === method ? '2px solid var(--accent)' : '1px solid var(--line)';
+      });
+    };
+    ['card', 'paypal'].forEach(m => {
+      const b = el('button', {
+        class: 'card', style: {
+          padding: '1rem', cursor: 'pointer', textAlign: 'center',
+          border: method === m ? '2px solid var(--accent)' : '1px solid var(--line)',
+        },
+        onClick: () => { method = m; update(); }
+      },
+        el('div', { html: ICONS.card, style: { width: '32px', height: '32px', margin: '0 auto 0.4rem' } }),
+        el('div', { style: { fontWeight: 600 } }, m === 'card' ? 'Card / Stripe' : 'PayPal'),
+        el('div', { style: { fontSize: '0.75rem', color: 'var(--fg-mute)', marginTop: '2px' } }, m === 'card' ? 'Visa, Master, JCB' : 'Web checkout'),
+      );
+      methodGroup.appendChild(b);
+    });
+
+    Modal.open({
+      title: `Pay ${fmtMoney(payment.amount)}`,
+      body: el('div', {},
+        el('p', { style: { color: 'var(--fg-soft)', fontSize: '0.88rem' } },
+          'Mock checkout — replace with real Stripe/PayPal in Code.gs. Secure token issued by Apps Script.'),
+        methodGroup,
+        el('div', { class: 'card', style: { background: 'var(--bg-sunk)', padding: '1rem' } },
+          el('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' } }, el('span', {}, 'Court rental'), el('span', {}, fmtMoney(payment.amount))),
+          el('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginTop: '0.3rem' } }, el('span', {}, 'Service fee'), el('span', {}, fmtMoney(0))),
+          el('div', { style: { display: 'flex', justifyContent: 'space-between', fontWeight: 700, marginTop: '0.5rem', paddingTop: '0.5rem', borderTop: '1px solid var(--line)' } }, el('span', {}, 'Total'), el('span', {}, fmtMoney(payment.amount))),
+        ),
+      ),
+      actions: [{
+        label: `Pay ${fmtMoney(payment.amount)}`,
+        class: 'btn-primary',
+        onClick: async (close) => {
+          const token = `tok_${uid()}_${Date.now()}`;
+          await API.call('payBooking', { bookingId: payment.bookingId, method, token });
+          const idx = State.payments.findIndex(x => x.id === payment.id);
+          if (idx >= 0) State.payments[idx] = { ...payment, status: 'paid', method, paidAt: Date.now() };
+          Toast.show({ title: 'Payment successful', msg: `${fmtMoney(payment.amount)} via ${method}`, type: 'success' });
+          Notify.push({ title: 'Payment received', body: `${fmtMoney(payment.amount)} confirmed.` });
+          close(); Render.current();
+        }
+      }]
+    });
+  },
+
+  notificationsSheet() {
+    const list = el('div', { class: 'stack' });
+    if (!State.notifications.length) {
+      list.appendChild(this.emptyState('No notifications yet.'));
+    } else {
+      State.notifications.forEach(n => {
+        list.appendChild(el('div', { class: 'row', onClick: () => API.call('markRead', { id: n.id }) },
+          el('div', { class: 'left' },
+            el('strong', {}, n.title),
+            el('small', {}, `${n.body || ''} · ${new Date(n.createdAt).toLocaleString()}`),
+          ),
+          !n.read ? el('span', { class: 'chip accent' }, 'new') : null,
+        ));
+      });
+    }
+    Modal.open({ title: 'Notifications', body: list });
+  },
+
+  /* ===== ADMIN ===== */
+  viewAdmin(view) {
+    if (State.user.role !== 'admin') {
+      view.appendChild(el('div', { class: 'card' }, this.emptyState('Admin access required. Sign in with an email containing "admin" to test.')));
+      return;
+    }
+    let tab = 'overview';
+    const tabBar = el('div', { class: 'tabs' });
+    const content = el('div', {});
+    const tabs = [
+      ['overview', 'Overview'],
+      ['bookings', 'Bookings'],
+      ['payments', 'Payments'],
+      ['logs', 'Logs'],
+    ];
+    function setTab(t) {
+      tab = t;
+      $$('.tab', tabBar).forEach(x => x.classList.toggle('active', x.dataset.tab === t));
+      content.innerHTML = '';
+      content.appendChild(renderTab());
+    }
+    tabs.forEach(([id, label]) => tabBar.appendChild(el('button', { class: 'tab' + (tab === id ? ' active' : ''), 'data-tab': id, onClick: () => setTab(id) }, label)));
+    function renderTab() {
+      if (tab === 'overview') {
+        const revenue = State.payments.filter(p => p.status === 'paid').reduce((s, p) => s + p.amount, 0);
+        const pending = State.payments.filter(p => p.status === 'pending').reduce((s, p) => s + p.amount, 0);
+        return el('div', { class: 'admin-grid' },
+          el('div', { class: 'card' }, el('div', { class: 'eyebrow' }, 'Revenue (paid)'), el('div', { style: { fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 600, color: 'var(--accent)' } }, fmtMoney(revenue))),
+          el('div', { class: 'card' }, el('div', { class: 'eyebrow' }, 'Pending'), el('div', { style: { fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 600, color: 'var(--clay)' } }, fmtMoney(pending))),
+          el('div', { class: 'card' }, el('div', { class: 'eyebrow' }, 'Total bookings'), el('div', { style: { fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 600 } }, String(State.bookings.length))),
+          el('div', { class: 'card' }, el('div', { class: 'eyebrow' }, 'Active courts'), el('div', { style: { fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 600 } }, String(State.courts.filter(c => c.active).length))),
+        );
+      }
+      if (tab === 'bookings') {
+        const t = el('table', { class: 'table' },
+          el('thead', {}, el('tr', {}, el('th', {}, 'Date'), el('th', {}, 'Time'), el('th', {}, 'Court'), el('th', {}, 'Owner'))),
+          el('tbody', {}, ...State.bookings.slice().reverse().slice(0, 50).map(b =>
+            el('tr', {}, el('td', {}, fmtDate(b.date, { year: undefined })), el('td', {}, b.time), el('td', {}, b.courtName), el('td', {}, sanitize(b.owner))),
+          )),
+        );
+        return el('div', { class: 'card', style: { overflowX: 'auto' } }, t);
+      }
+      if (tab === 'payments') {
+        const t = el('table', { class: 'table' },
+          el('thead', {}, el('tr', {}, el('th', {}, 'Owner'), el('th', {}, 'Amount'), el('th', {}, 'Method'), el('th', {}, 'Status'))),
+          el('tbody', {}, ...State.payments.slice().reverse().slice(0, 50).map(p =>
+            el('tr', {}, el('td', {}, sanitize(p.owner)), el('td', {}, fmtMoney(p.amount)), el('td', {}, p.method || '—'),
+              el('td', {}, el('span', { class: 'chip ' + (p.status === 'paid' ? 'success' : 'warn') }, p.status))),
+          )),
+        );
+        return el('div', { class: 'card', style: { overflowX: 'auto' } }, t);
+      }
+      if (tab === 'logs') {
+        return el('div', { class: 'card' }, ...State.notifications.slice(0, 30).map(n =>
+          el('div', { class: 'row' },
+            el('div', { class: 'left' }, el('strong', {}, n.title), el('small', {}, `${new Date(n.createdAt).toLocaleString()} · ${n.recipient || 'all'}`))
+          )
+        ));
+      }
+    }
+    view.appendChild(el('h2', { style: { marginBottom: '1rem' } }, 'Admin Dashboard'));
+    view.appendChild(tabBar);
+    view.appendChild(content);
+    setTab('overview');
+  },
+
+  /* ===== DISPLAY MODE ===== */
+  async displayBoard() {
+    const root = $('#root');
+    root.innerHTML = '';
+    const board = el('div', { class: 'display-board' });
+
+    const update = (m) => {
+      board.innerHTML = '';
+      if (!m) {
+        board.appendChild(el('div', { class: 'ds-meta' },
+          el('span', {}, 'DINK & DRIVE LIVE'),
+          el('span', {}, new Date().toLocaleTimeString()),
+        ));
+        board.appendChild(el('div', { class: 'ds-grid' },
+          el('div', { class: 'ds-team' }, el('div', { class: 'ds-name', style: { opacity: 0.6 } }, 'Waiting for match…')),
+        ));
+        board.appendChild(el('div', { class: 'ds-footer' },
+          el('span', {}, 'No active match'),
+          el('span', { class: 'ds-brand' },
+            el('span', {}, 'Dink & Drive'),
+            el('span', { class: 'ds-powered' }, 'Powered by CYRABELL'),
+          ),
+        ));
+        return;
+      }
+      const matchTypeLabel = m.matchType === 'bo5' ? 'BEST OF 5'
+        : m.matchType === 'bo3' ? 'BEST OF 3'
+        : 'SINGLE MATCH';
+      const seriesPart = m.matchType !== 'single'
+        ? ` · SET ${m.currentSet} · SERIES ${m.teamA.setsWon}–${m.teamB.setsWon}`
+        : '';
+      board.appendChild(el('div', { class: 'ds-meta' },
+        el('span', {}, `${m.format.toUpperCase()} · ${matchTypeLabel} · TO ${m.target}${seriesPart}`),
+        el('span', {}, m.courtName || 'LIVE'),
+      ));
+      const totalSets = m.matchType === 'bo5' ? 5 : (m.matchType === 'bo3' ? 3 : 1);
+      const teamRow = (t, side) => {
+        const photos = Array.isArray(t.photos) ? t.photos.filter(Boolean)
+                     : (t.photo ? [t.photo] : []);  // backward-compat
+        const slots = m.format === 'doubles' ? 2 : 1;
+        const avatars = [];
+        const players = (t.players || '').split(/[,/&]| and /).map(s => s.trim()).filter(Boolean);
+        for (let i = 0; i < slots; i++) {
+          const photo = photos[i];
+          avatars.push(el('div', { class: 'ds-avatar' },
+            photo
+              ? el('img', { src: photo, alt: '' })
+              : el('span', {}, (players[i] || t.name || '?').charAt(0).toUpperCase()),
+          ));
+        }
+        // Set pips
+        const pips = [];
+        if (m.matchType !== 'single') {
+          for (let i = 0; i < totalSets; i++) {
+            pips.push(el('div', { class: 'ds-set-pip' + (i < (t.setsWon || 0) ? ' won' : '') }));
+          }
+        }
+        return el('div', { class: 'ds-team' + (m.serving === side ? ' serving' : '') },
+          el('div', { class: 'ds-side' },
+            el('div', { class: 'ds-avatars' }, ...avatars),
+            el('div', { style: { minWidth: 0 } },
+              el('div', { class: 'ds-name' }, t.name),
+              el('div', { class: 'ds-players' }, t.players),
+              pips.length ? el('div', { class: 'ds-set-pips' }, ...pips) : null,
+            ),
+          ),
+          el('div', { class: 'ds-score' }, String(t.score)),
+        );
+      };
+      board.appendChild(el('div', { class: 'ds-grid' }, teamRow(m.teamA, 'A'), teamRow(m.teamB, 'B')));
+
+      // Set history (only for bo3/bo5)
+      if (m.matchType !== 'single' && m.sets.length) {
+        const setNodes = m.sets.map((s, i) => el('div', { class: 'ds-set' },
+          el('div', { class: 'ds-set-label' }, `S${i+1}`),
+          el('div', { class: 'ds-set-score' }, `${s.a}–${s.b}`),
+        ));
+        board.appendChild(el('div', { class: 'ds-set-history', style: { justifyContent: 'center', padding: '1vh 0' } }, ...setNodes));
+      }
+
+      board.appendChild(el('div', { class: 'ds-footer' },
+        el('span', {}, m.winner
+          ? `WINNER · ${m[`team${m.winner}`].name}${m.matchType !== 'single' ? ` · ${m.teamA.setsWon}–${m.teamB.setsWon}` : ''}`
+          : `SERVING · ${m.serving === 'A' ? m.teamA.name : m.teamB.name}`),
+        el('span', { class: 'ds-brand' },
+          el('span', {}, 'Dink & Drive'),
+          el('span', { class: 'ds-powered' }, 'Powered by CYRABELL'),
+        ),
+      ));
+    };
+    root.appendChild(board);
+    update(null);
+
+    const poll = async () => {
+      try {
+        let match = null;
+        if (State.displayMatchId) {
+          match = await API.call('getLiveScore', { id: State.displayMatchId });
+        } else {
+          const all = await API.call('getScores');
+          match = (all || []).filter(s => !s.winner).sort((a,b) => (b.startedAt||0) - (a.startedAt||0))[0]
+               || (all || []).sort((a,b) => (b.startedAt||0) - (a.startedAt||0))[0];
+        }
+        update(match);
+      } catch (e) {}
+    };
+    poll();
+    setInterval(poll, CONFIG.POLL_INTERVAL_MS);
+    try { if ('wakeLock' in navigator) await navigator.wakeLock.request('screen'); } catch {}
+  },
+};
+
+/* -------------------------------------------------------------
+   iCAL EXPORT
+   ------------------------------------------------------------- */
+function exportICal(bookings, label) {
+  if (!bookings.length) {
+    Toast.show({ title: 'Nothing to export', type: 'warn' });
+    return;
+  }
+  const pad = n => String(n).padStart(2, '0');
+  const toICS = (date, time, durationHours) => {
+    const start = new Date(`${date}T${time}:00`);
+    const end = new Date(start.getTime() + (durationHours || 1) * 3600 * 1000);
+    const fmt = d => `${d.getUTCFullYear()}${pad(d.getUTCMonth()+1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00Z`;
+    return { start: fmt(start), end: fmt(end) };
+  };
+  const lines = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Dink & Drive//Pickleball//EN', 'CALSCALE:GREGORIAN',
+  ];
+  bookings.forEach(b => {
+    const { start, end } = toICS(b.date, b.time, b.duration);
+    lines.push('BEGIN:VEVENT',
+      `UID:${b.id}@dinkdrive.club`,
+      `DTSTAMP:${start}`,
+      `DTSTART:${start}`,
+      `DTEND:${end}`,
+      `SUMMARY:Pickleball · ${b.courtName}`,
+      `DESCRIPTION:Players: ${b.players || b.owner}`,
+      `LOCATION:${CONFIG.CLUB_NAME}, ${CONFIG.CLUB_CITY}`,
+      'END:VEVENT');
+  });
+  lines.push('END:VCALENDAR');
+  const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `dink-drive-${label}.ics`;
+  a.click();
+  Toast.show({ title: 'Calendar exported', msg: `${bookings.length} events`, type: 'success' });
+}
+
+/* -------------------------------------------------------------
+   SERVICE WORKER (PWA)
+   ------------------------------------------------------------- */
+function registerSW() {
+  if (!('serviceWorker' in navigator)) return;
+  const swCode = `
+    const CACHE = 'dink-v1';
+    self.addEventListener('install', e => self.skipWaiting());
+    self.addEventListener('activate', e => self.clients.claim());
+    self.addEventListener('fetch', e => {
+      const req = e.request;
+      if (req.method !== 'GET') return;
+      e.respondWith(
+        caches.open(CACHE).then(async cache => {
+          const cached = await cache.match(req);
+          const fetchPromise = fetch(req).then(res => {
+            if (res && res.status === 200 && res.type === 'basic') cache.put(req, res.clone());
+            return res;
+          }).catch(() => cached);
+          return cached || fetchPromise;
+        })
+      );
+    });
+  `;
+  try {
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const url = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(url).catch(() => {});
+  } catch {}
+}
+
+/* -------------------------------------------------------------
+   BOOT
+   ------------------------------------------------------------- */
+(async function boot() {
+  Theme.apply();
+  Auth.restore();
+  await Render.app();
+  registerSW();
+
+  if (State.user) {
+    try {
+      const scores = await API.call('getScores');
+      State.scores = scores || [];
+      const active = (scores || []).find(s => !s.winner && (Date.now() - (s.startedAt || 0)) < 6 * 3600 * 1000);
+      if (active && !State.currentMatch) State.currentMatch = active;
+    } catch {}
+  }
+})();
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && !State.isDisplayMode && State.user) {
+    loadAll().then(() => Render.current()).catch(()=>{});
+  }
+});
+
+</script>
+</body>
+</html>
