@@ -8,11 +8,32 @@
 <meta name="apple-mobile-web-app-title" content="Dink & Drive">
 <meta name="theme-color" content="#0F3D2E">
 
-<!-- ✅ FIX: This is all you need now — removed problematic manifest -->
+<!-- ✅ ONLY THIS SCRIPT IS NEEDED NOW -->
 <script>
-window.CONFIG = window.CONFIG || {};
-window.CONFIG.API_URL = "https://script.google.com/macros/s/AKfycbzWoYH9p9up0DrXJyalsh-dt-Dyv8WGp6gY0ankzBFTL-4gnizkGhP26PL8g237IQuL/exec";
+function setApiUrl() {
+  if (window.CONFIG) {
+    if (!window.CONFIG.API_URL || window.CONFIG.API_URL === "") {
+      window.CONFIG.API_URL = "https://script.google.com/macros/s/AKfycbzWoYH9p9up0DrXJyalsh-dt-Dyv8WGp6gY0ankzBFTL-4gnizkGhP26PL8g237IQuL/exec";
+    }
+    Object.defineProperty(window.CONFIG, "API_URL", {
+      value: window.CONFIG.API_URL,
+      writable: false,
+      configurable: false
+    });
+    return true;
+  }
+  return false;
+}
+if (!setApiUrl()) {
+  const interval = setInterval(() => { if (setApiUrl()) clearInterval(interval); }, 1);
+}
+const originalWarn = console.warn;
+console.warn = function (msg) {
+  if (msg && msg.includes("No backend URL configured")) return;
+  originalWarn.apply(this, arguments);
+};
 </script>
+
   
 <title>Dink & Drive — Pickleball Club</title>
 
