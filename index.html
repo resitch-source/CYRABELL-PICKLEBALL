@@ -12,22 +12,7 @@
 
 <!-- Inline PWA manifest via data URI -->
 <!---link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Dink%20%26%20Drive%22%2C%22short_name%22%3A%22Dink%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230F3D2E%22%2C%22theme_color%22%3A%22%230F3D2E%22%2C%22backend_url%22%3A%22https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbzWoYH9p9up0DrXJyalsh-dt-Dyv8WGp6gY0ankzBFTL-4gnizkGhP26PL8g237IQuL%2Fexec%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D%2522http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%2522%2520viewBox%253D%25220%25200%2520192%2520192%2522%253E%253Crect%2520width%253D%2522192%2522%2520height%253D%2522192%2522%2520rx%253D%252240%2522%2520fill%253D%2522%25230F3D2E%2522%252F%253E%253Ccircle%2520cx%253D%252296%2522%2520cy%253D%252296%2522%2520r%253D%252256%2522%2520fill%253D%2522%2523E8B647%2522%252F%253E%253Ccircle%2520cx%253D%252296%2522%2520cy%253D%252296%2522%2520r%253D%252256%2522%2520fill%253D%2522none%2522%2520stroke%253D%2522%25230F3D2E%2522%2520stroke-width%253D%25224%2522%2520stroke-dasharray%253D%25228%25208%2522%252F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D" /---->
-<script>
-window.APP_CONFIG = {
-  name: "Dink & Drive",
-  short_name: "Dink",
-  start_url: ".",
-  display: "standalone",
-  background_color: "#0F3D2E",
-  theme_color: "#0F3D2E",
-  backend_url: "https://script.google.com/macros/s/AKfycbzWoYH9p9up0DrXJyalsh-dt-Dyv8WGp6gY0ankzBFTL-4gnizkGhP26PL8g237IQuL/exec",
-  icons: [{
-    src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%230F3D2E'/%3E%3Ccircle cx='96' cy='96' r='56' fill='%23E8B647'/%3E%3Ccircle cx='96' cy='96' r='56' fill='none' stroke='%230F3D2E' stroke-width='4' stroke-dasharray='8 8'/%3E%3C/svg%3E",
-    sizes: "192x192",
-    type: "image/svg+xml"
-  }]
-};
-</script>                    
+                   
           
 <!-- Favicon as inline SVG -->
 <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="%230F3D2E"/><circle cx="32" cy="32" r="18" fill="%23E8B647"/><circle cx="32" cy="32" r="18" fill="none" stroke="%230F3D2E" stroke-width="1.5" stroke-dasharray="3 3"/></svg>' />
@@ -1650,6 +1635,18 @@ body.display-mode::before { opacity: 0.2; }
   border-radius: 4px;
 }
 </style>
+
+<script>
+// FORCE SET BACKEND URL — fixes "No backend URL configured" permanently
+window.BACKEND_URL = "https://script.google.com/macros/s/AKfycbzWoYH9p9up0DrXJyalsh-dt-Dyv8WGp6gY0ankzBFTL-4gnizkGhP26PL8g237IQuL/exec";
+window.BACKEND_CONFIGURED = true;
+
+// Also set it inside the app's expected config structure
+window.CONFIG = window.CONFIG || {};
+window.CONFIG.backend_url = window.BACKEND_URL;
+window.CONFIG.backend = { url: window.BACKEND_URL, enabled: true };
+</script>
+  
 </head>
 <body>
 <noscript><p style="padding:2rem;text-align:center;">This app requires JavaScript.</p></noscript>
