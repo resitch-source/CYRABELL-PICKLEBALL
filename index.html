@@ -1,46 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Dink & Drive">
-<meta name="theme-color" content="#0F3D2E">
-
-<!-- ✅ ONLY THIS SCRIPT IS NEEDED NOW -->
-<script>
-function setApiUrl() {
-  if (window.CONFIG) {
-    if (!window.CONFIG.API_URL || window.CONFIG.API_URL === "") {
-      window.CONFIG.API_URL = "https://script.google.com/macros/s/AKfycbzWoYH9p9up0DrXJyalsh-dt-Dyv8WGp6gY0ankzBFTL-4gnizkGhP26PL8g237IQuL/exec";
-    }
-    Object.defineProperty(window.CONFIG, "API_URL", {
-      value: window.CONFIG.API_URL,
-      writable: false,
-      configurable: false
-    });
-    return true;
-  }
-  return false;
-}
-if (!setApiUrl()) {
-  const interval = setInterval(() => { if (setApiUrl()) clearInterval(interval); }, 1);
-}
-const originalWarn = console.warn;
-console.warn = function (msg) {
-  if (msg && msg.includes("No backend URL configured")) return;
-  originalWarn.apply(this, arguments);
-};
-</script>
-
-  
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+<meta name="theme-color" content="#0F3D2E" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0A1F18" media="(prefers-color-scheme: dark)" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="description" content="Dink & Drive — premium pickleball club management. Book courts, score matches, and manage your club." />
 <title>Dink & Drive — Pickleball Club</title>
 
 <!-- Inline PWA manifest via data URI -->
-<!---link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Dink%20%26%20Drive%22%2C%22short_name%22%3A%22Dink%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230F3D2E%22%2C%22theme_color%22%3A%22%230F3D2E%22%2C%22backend_url%22%3A%22https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbzWoYH9p9up0DrXJyalsh-dt-Dyv8WGp6gY0ankzBFTL-4gnizkGhP26PL8g237IQuL%2Fexec%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D%2522http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%2522%2520viewBox%253D%25220%25200%2520192%2520192%2522%253E%253Crect%2520width%253D%2522192%2522%2520height%253D%2522192%2522%2520rx%253D%252240%2522%2520fill%253D%2522%25230F3D2E%2522%252F%253E%253Ccircle%2520cx%253D%252296%2522%2520cy%253D%252296%2522%2520r%253D%252256%2522%2520fill%253D%2522%2523E8B647%2522%252F%253E%253Ccircle%2520cx%253D%252296%2522%2520cy%253D%252296%2522%2520r%253D%252256%2522%2520fill%253D%2522none%2522%2520stroke%253D%2522%25230F3D2E%2522%2520stroke-width%253D%25224%2522%2520stroke-dasharray%253D%25228%25208%2522%252F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D" /---->
-                   
-          
+<link rel="manifest" href='data:application/manifest+json,{"name":"Dink %26 Drive","short_name":"Dink","start_url":".","display":"standalone","background_color":"%230F3D2E","theme_color":"%230F3D2E","icons":[{"src":"data:image/svg%2Bxml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect width=%22192%22 height=%22192%22 rx=%2240%22 fill=%22%230F3D2E%22/%3E%3Ccircle cx=%2296%22 cy=%2296%22 r=%2256%22 fill=%22%23E8B647%22/%3E%3Ccircle cx=%2296%22 cy=%2296%22 r=%2256%22 fill=%22none%22 stroke=%22%230F3D2E%22 stroke-width=%224%22 stroke-dasharray=%228%208%22/%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"}]}' />
+
 <!-- Favicon as inline SVG -->
 <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="%230F3D2E"/><circle cx="32" cy="32" r="18" fill="%23E8B647"/><circle cx="32" cy="32" r="18" fill="none" stroke="%230F3D2E" stroke-width="1.5" stroke-dasharray="3 3"/></svg>' />
 
@@ -1662,9 +1634,6 @@ body.display-mode::before { opacity: 0.2; }
   border-radius: 4px;
 }
 </style>
-
-
-  
 </head>
 <body>
 <noscript><p style="padding:2rem;text-align:center;">This app requires JavaScript.</p></noscript>
